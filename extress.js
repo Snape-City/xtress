@@ -1,3 +1,6 @@
+const { EventEmitter } = require('events');
+const profiles = new EventEmitter();
+
 function Node(val) {
   this.path = val;
   this.childRoutes = [];
@@ -57,6 +60,46 @@ module.exports = {
   },
   wrap: (tree) => {
     console.log('tree', tree)
-  }
+  },
+
+
+  routeTimer: (req,res,next) => {
+
+    const splitRoute = req.originalUrl.substring(1).split('/'); //break request route into parts delimited by slash
+    let currNode = Tree
+
+    routeSearcher = (currNode, elapsedMS) => {
+        console.log('req 1 ===>', req.method);
+        if (currNode.path === req.originalUrl.substring(1).split('/')[req.originalUrl.substring(1).split('/').length-1]) addPerformanceData(currNode, elapsedMS)
+        for ( let i = 0; i < currNode.childRoutes.length; i += 1 ) {
+            console.log('child route length===>',Tree.childRoutes.length)
+            if (splitRoute[0] === currNode.childRoutes[i].path) { // determine if there is a match
+                currNode = currNode.childRoutes[i];
+                if (splitRoute.length > 0) {
+                    splitRoute.shift();
+                    routeSearcher(currNode, elapsedMS) // if there are more items in the split route, keep digging...
+                }
+            };
+        };
+    };
+
+    addPerformanceData = (currNode, elapsedMS) => {
+        //onsole.log('req 2 ===>', req.method);
+        const routeMethod = req.method.toLowerCase(); // set the method associated with the request to a variable
+        currNode.methods[routeMethod].performance = elapsedMS + 'ms'
+        //console.log('currnode ===>', currNode.methods)
+    }
+    
+    profiles.on('route', ({ req, elapsedMS }) => {
+        routeSearcher(Tree, elapsedMS)
+    });
+
+    const start = Date.now(); 
+
+    res.once( 'finish', ()=>{
+      profiles.emit('route', {req, elapsedMS: Date.now() - start })
+    })      
+    next();
+}
 
 }
