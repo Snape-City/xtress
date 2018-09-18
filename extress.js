@@ -1,16 +1,16 @@
+function Node(val) {
+  this.path = val;
+  this.childRoutes = [];
+  this.methods = {};
+}
+
+function MiddleWareNode(name) {
+  this.middleWareName = name;
+  this.performance = null;
+}
+
 module.exports = {
   map: (app) => {
-    function Node(val) {
-      this.path = val;
-      this.childRoutes = [];
-      this.methods = {};
-    }
-
-    function MiddleWareNode(name) {
-      this.middleWareName = name;
-      this.performance = null;
-    }
-
     const tree = new Node('');
 
     function buildTree(stack) {
