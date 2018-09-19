@@ -1,5 +1,9 @@
 const { EventEmitter } = require('events');
 const profiles = new EventEmitter();
+const { performance } = require('perf_hooks');
+var fs = require('fs');
+
+let Tree;
 
 function Node(val) {
   this.path = val;
@@ -14,7 +18,7 @@ function MiddleWareNode(name) {
 
 module.exports = {
   map: (app) => {
-    const tree = new Node('');
+    Tree = new Node('/');
 
     function buildTree(stack) {
       stack.forEach(endpoint => { 
@@ -23,11 +27,11 @@ module.exports = {
           // const splitPath = endpoint.route.path.substring(1).split('/'); //split each full route path into an array of seperate pieces
         }
       })
-      return tree
+      return Tree
     }
 
     function buildBranch(splitPath, endpoint) {
-      let curr = tree;  //variable used to reset the current tree location to the slash route for each new route
+      let curr = Tree;  //variable used to reset the current Tree location to the slash route for each new route
 
       splitPath.forEach(subPath => { //loop over each split sub route
         if (curr.path !== subPath) { //check if curr path is equal to route path from split array
@@ -58,21 +62,23 @@ module.exports = {
     }
     return buildTree(app._router.stack)
   },
-  wrap: (tree) => {
-    console.log('tree', tree)
-  },
-
-
   routeTimer: (req,res,next) => {
+    const start = performance.now(); 
+
+    profiles.on('route', ({ req, elapsedMS }) => {
+      routeSearcher(currNode, elapsedMS)
+    });
+    
+    res.once( 'finish', ()=>{
+      profiles.emit('route', {req, elapsedMS: performance.now() - start })
+    })    
 
     const splitRoute = req.originalUrl.substring(1).split('/'); //break request route into parts delimited by slash
     let currNode = Tree
 
     routeSearcher = (currNode, elapsedMS) => {
-        console.log('req 1 ===>', req.method);
         if (currNode.path === req.originalUrl.substring(1).split('/')[req.originalUrl.substring(1).split('/').length-1]) addPerformanceData(currNode, elapsedMS)
         for ( let i = 0; i < currNode.childRoutes.length; i += 1 ) {
-            console.log('child route length===>',Tree.childRoutes.length)
             if (splitRoute[0] === currNode.childRoutes[i].path) { // determine if there is a match
                 currNode = currNode.childRoutes[i];
                 if (splitRoute.length > 0) {
@@ -84,22 +90,15 @@ module.exports = {
     };
 
     addPerformanceData = (currNode, elapsedMS) => {
-        //onsole.log('req 2 ===>', req.method);
         const routeMethod = req.method.toLowerCase(); // set the method associated with the request to a variable
-        currNode.methods[routeMethod].performance = elapsedMS + 'ms'
-        //console.log('currnode ===>', currNode.methods)
+        currNode.methods[routeMethod].performance = elapsedMS + 'ms';
+        var stream = fs.createWriteStream("index.html");
+        stream.once('open', () => {
+          stream.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>const Tree = ${JSON.stringify(Tree)}; window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});</script></body></html>`);
+          stream.end();
+        });
     }
-    
-    profiles.on('route', ({ req, elapsedMS }) => {
-        routeSearcher(Tree, elapsedMS)
-    });
 
-    const start = Date.now(); 
-
-    res.once( 'finish', ()=>{
-      profiles.emit('route', {req, elapsedMS: Date.now() - start })
-    })      
     next();
-}
-
+  }
 }
