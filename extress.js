@@ -1,60 +1,104 @@
+const { EventEmitter } = require('events');
+const profiles = new EventEmitter();
+const { performance } = require('perf_hooks');
+var fs = require('fs');
+
+let Tree;
+
+function Node(val) {
+  this.path = val;
+  this.childRoutes = [];
+  this.methods = {};
+}
+
+function MiddleWareNode(name) {
+  this.middleWareName = name;
+  this.performance = null;
+}
+
 module.exports = {
-  
-  map: () => {
-    function Node(val) {
-      this.path = val;
-      this.childRoutes = [];
-      this.methods = {};
+  map: (app) => {
+    Tree = new Node('/');
+
+    function buildTree(stack) {
+      stack.forEach(endpoint => { 
+        if (endpoint.route) {//eliminate all undefined routes
+          buildBranch(endpoint.route.path.substring(1).split('/'), endpoint);
+          // const splitPath = endpoint.route.path.substring(1).split('/'); //split each full route path into an array of seperate pieces
+        }
+      })
+      return Tree
     }
 
-    function MiddleWareNode(name) {
-      this.middleWareName = name;
-      this.performance = null;
+    function buildBranch(splitPath, endpoint) {
+      let curr = Tree;  //variable used to reset the current Tree location to the slash route for each new route
+
+      splitPath.forEach(subPath => { //loop over each split sub route
+        if (curr.path !== subPath) { //check if curr path is equal to route path from split array
+          const filteredChildroute = curr.childRoutes.filter(elem => elem.path === subPath);
+          if (filteredChildroute[0]) { //check if path is included within the children array of curr
+            curr = filteredChildroute[0] //if yes, set that child to the curr
+          } else { //if no, create new node for that val and set it equal to the curr
+            const newNode = new Node(subPath);
+            curr.childRoutes.push(newNode);
+            curr = newNode;
+          }
+        }
+        if (splitPath.indexOf(subPath) === splitPath.length - 1) { //check if current route path is the last in the split array
+          //if it is, we need to add an obj for the method type 
+          curr.methods[Object.keys(endpoint.route.methods)[0]] = {
+            middleWare: buildMethod(endpoint),
+            performance: null
+          }; 
+        }
+      })
     }
 
-    const tree = new Node('/');
-
-    app._router.stack.forEach(endpoint => { 
-      if (endpoint.route) {
-        //.   '/send/it/now'.      ['delet', send', 'it']
-        const splitPath = endpoint.route.path.substring(1).split('/'); //split each full route path into an array of seperate pieces
-        
-        let curr = tree;  //variable used to reset the current tree location to the slash route for each new route
-        splitPath.forEach(subPath => { //loop over each split sub route
-          if (subPath === '') {
-            splitPath.splice(splitPath.indexOf(subPath), 1, '/');
-          }       
-        });
-
-        splitPath.forEach(subPath => { //loop over each split sub route
-          if (curr.path !== subPath) { //check if curr path is equal to route path from split array
-            const filteredChildroute = curr.childRoutes.filter(elem => elem.path === subPath);
-            if (filteredChildroute[0]) { //check if path is included within the children array of curr
-              curr = filteredChildroute[0] //if yes, set that child to the curr
-            } else { //if no, create new node for that val and set it equal to the curr
-              const newNode = new Node(subPath);
-              curr.childRoutes.push(newNode);
-              curr = newNode;
-            }
-          }
-          if (splitPath.indexOf(subPath) === splitPath.length - 1) { //check if current route path is the last in the split array
-            //if it is, we need to add an obj for the method type 
-            const reducedMiddleWare = endpoint.route.stack.reduce((initial, current) => {
-              initial.push(new MiddleWareNode(current.name));
-              return initial
-            }, []);
-            curr.methods[Object.entries(endpoint.route.methods)[0][0]] = {
-              middleWare: reducedMiddleWare,
-              performance: null
-            }; 
-          }
-        })
-      }
-    })
-    return tree
+    function buildMethod(endpoint) {
+      return endpoint.route.stack.reduce((initial, current) => {
+        initial.push(new MiddleWareNode(current.name));
+        return initial
+      }, []);
+    }
+    return buildTree(app._router.stack)
   },
-  wrap: () => {
+  routeTimer: (req,res,next) => {
+    const start = performance.now(); 
 
+    profiles.on('route', ({ req, elapsedMS }) => {
+      routeSearcher(currNode, elapsedMS)
+    });
+    
+    res.once( 'finish', ()=>{
+      profiles.emit('route', {req, elapsedMS: performance.now() - start })
+    })    
+
+    const splitRoute = req.originalUrl.substring(1).split('/'); //break request route into parts delimited by slash
+    let currNode = Tree
+
+    routeSearcher = (currNode, elapsedMS) => {
+        if (currNode.path === req.originalUrl.substring(1).split('/')[req.originalUrl.substring(1).split('/').length-1]) addPerformanceData(currNode, elapsedMS)
+        for ( let i = 0; i < currNode.childRoutes.length; i += 1 ) {
+            if (splitRoute[0] === currNode.childRoutes[i].path) { // determine if there is a match
+                currNode = currNode.childRoutes[i];
+                if (splitRoute.length > 0) {
+                    splitRoute.shift();
+                    routeSearcher(currNode, elapsedMS) // if there are more items in the split route, keep digging...
+                }
+            };
+        };
+    };
+
+    addPerformanceData = (currNode, elapsedMS) => {
+        const routeMethod = req.method.toLowerCase(); // set the method associated with the request to a variable
+        currNode.methods[routeMethod].performance = elapsedMS + 'ms';
+        var stream = fs.createWriteStream("index.html");
+        stream.once('open', () => {
+          stream.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>const Tree = ${JSON.stringify(Tree)}; window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});</script></body></html>`);
+          stream.end();
+        });
+    }
+
+    next();
   }
-
 }
