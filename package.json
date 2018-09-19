@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "![travis](https://travis-ci.com/Snape-City/extress.svg?branch=master)",
   "main": "extress.js",
+  "bin": {
+    "extress": "./test.js"
+  },
   "scripts": {
     "test": "echo test"
   },
