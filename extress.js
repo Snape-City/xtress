@@ -1,6 +1,8 @@
 const { EventEmitter } = require('events');
 const profiles = new EventEmitter();
 const { performance } = require('perf_hooks');
+var fs = require('fs');
+
 let Tree;
 
 function Node(val) {
@@ -89,7 +91,12 @@ module.exports = {
 
     addPerformanceData = (currNode, elapsedMS) => {
         const routeMethod = req.method.toLowerCase(); // set the method associated with the request to a variable
-        currNode.methods[routeMethod].performance = elapsedMS + 'ms'
+        currNode.methods[routeMethod].performance = elapsedMS + 'ms';
+        var stream = fs.createWriteStream("index.html");
+        stream.once('open', () => {
+          stream.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>const Tree = ${JSON.stringify(Tree)}; window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});</script></body></html>`);
+          stream.end();
+        });
     }
 
     next();
