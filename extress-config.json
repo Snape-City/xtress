@@ -1,0 +1,14 @@
+{
+  "requests": [
+    {
+      "method": "GET",
+      "route": "http://localhost:3333/slow",
+      "requestNum": 2
+    },
+    {
+      "method": "GET",
+      "route": "http://localhost:3333/slower",
+      "requestNum": 2
+    }
+  ]
+}

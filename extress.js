@@ -2,7 +2,7 @@ const { EventEmitter } = require('events');
 const profiles = new EventEmitter();
 const { performance } = require('perf_hooks');
 const { Tree, Node } = require('./util/Tree');
-var fs = require('fs');
+const fs = require('fs');
 
 function MiddleWareNode(name) {
   this.middleWareName = name;
