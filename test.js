@@ -1,20 +1,6 @@
 #!/usr/bin/env node
 const axios = require('axios');
-
-const config = {
-  requests: [
-    {
-      method: 'GET',
-      route: 'http://localhost:3333/slow',
-      requestNum: 2
-    },
-    {
-      method: 'GET',
-      route: 'http://localhost:3333/slower',
-      requestNum: 2
-    }
-  ]
-};
+const config = require('./extress-config.json');
 
 // Helper method for pushing promise into array
 const promPush = (promArr, request) => {
