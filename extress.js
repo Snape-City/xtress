@@ -93,6 +93,7 @@ const Extress = {
     addPerformanceData = (currNode, elapsedMS) => {
       const routeMethod = req.method.toLowerCase(); // set the method associated with the request to a variable
       currNode.methods[routeMethod].performance = elapsedMS + 'ms';
+      Extress.tree.root.path = '/';
       var stream = fs.createWriteStream('index.html');
       stream.once('open', () => {
         stream.write(

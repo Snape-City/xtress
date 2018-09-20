@@ -47,14 +47,18 @@ app.delete('/test/example/randomMiddleware', dummyController3.mw4, dummyControll
 
 app.get('/users', dummyController1.mw1, dummyController2.mw2, dummyController1.mw2, dummyController1.mwLast);
 app.post('/users', dummyController1.mw1, dummyController2.mw2, dummyController1.mw3, dummyController1.mwLast);
-app.put('/users', dummyController1.mw1, dummyController2.mw2, dummyController1.mw4, dummyController1.mwLast);
-app.delete('/users', dummyController1.mw1, dummyController2.mw2, dummyController1.mw4, dummyController4.mwLast);
+app.put('/users', dummyController1.mw1, dummyController2.mw2, dummyController4.mw4, dummyController1.mwLast);
+app.delete('/users', dummyController1.mw1, dummyController2.mw2, dummyController1.mw2, dummyController4.mwLast);
 
 app.get('/api', dummyController4.mw1, dummyController1.mw2, dummyController4.mw3, dummyController1.mwLast);
 app.post('/api', dummyController1.mw1, dummyController1.mw2, dummyController1.mw3, dummyController1.mwLast);
 app.put('/api', dummyController4.mw5, dummyController1.mw2, dummyController4.mw7, dummyController1.mwLast);
 app.delete('/api', dummyController1.mw1, dummyController4.mw5, dummyController4.mw3, dummyController1.mwLast);
 
+app.get('/heavily/nexted/trash/routes', dummyController1.mw1, dummyController1.mwLast);
+app.post('/heavily/nexted/trash/routes', dummyController2.mw1, dummyController1.mwLast);
+app.put('/heavily/nexted/trash/routes', dummyController3.mw1, dummyController1.mwLast);
+app.delete('/heavily/nexted/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
 app.listen(PORT,
   app.extress.map(app), 

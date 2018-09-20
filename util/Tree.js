@@ -5,7 +5,7 @@ function Node(path) {
 }
 
 function Tree(path) {
-  this.root = new Node(path || '/');
+  this.root = new Node(path || '');
 }
 
 Tree.prototype.traverseDFS = function(callback) {

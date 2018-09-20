@@ -11,15 +11,15 @@ module.exports = {
     console.log('running mw3 => (Controller 3)');
     setTimeout(() => next(), 8721);
   },
-  mw4: (rem res, next) => {
+  mw4: (req, res, next) => {
     console.log('running mw4 => (Controller 3)');
     setTimeout(() => next(), 658);
   },
-  mw5: (rem res, next) => {
+  mw5: (req, res, next) => {
     console.log('running mw5 => (Controller 3)');
     setTimeout(() => next(), 1080);
   },
-  mwLast: (rem res, next) => {
+  mwLast: (req, res, next) => {
     console.log('running mwLast => (Controller 3)');
     setTimeout(() => res.sendStatus(200), 3);
   },

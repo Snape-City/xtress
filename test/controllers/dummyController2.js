@@ -11,7 +11,7 @@ module.exports = {
     console.log('running mw3 => (Controller 2)');
     setTimeout(() => next(), 981);
   },
-  mwLast: (rem res, next) => {
+  mwLast: (req, res, next) => {
     console.log('running mwLast => (Controller 2)');
     setTimeout(() => res.sendStatus(200), 11234);
   }

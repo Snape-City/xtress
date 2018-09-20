@@ -11,32 +11,32 @@ module.exports = {
     console.log('running mw3 => (Controller 3)');
     setTimeout(() => next(), 12);
   },
-  mw4: (rem res, next) => {
+  mw4: (req, res, next) => {
     console.log('running mw4 => (Controller 3)');
     setTimeout(() => next(), 345);
   },
-  mw5: (rem res, next) => {
+  mw5: (req, res, next) => {
     console.log('running mw5 => (Controller 3)');
     setTimeout(() => next(), 777);
   },
-  mw6: (rem res, next) => {
+  mw6: (req, res, next) => {
     console.log('running mw6 => (Controller 3)');
     setTimeout(() => next(), 888);
   },
-  mw7: (rem res, next) => {
+  mw7: (req, res, next) => {
     console.log('running mw7 => (Controller 3)');
     setTimeout(() => next(), 1111);
   },
-  mw8: (rem res, next) => {
+  mw8: (req, res, next) => {
     console.log('running mw8 => (Controller 3)');
     setTimeout(() => next(), 2222);
   },
-  mw9: (rem res, next) => {
+  mw9: (req, res, next) => {
     console.log('running mw9 => (Controller 3)');
     setTimeout(() => next(), 3333);
   },
-  mwLast: (rem res, next) => {
+  mwLast: (req, res, next) => {
     console.log('running mwLast => (Controller 3)');
-    setTimeout(() => res.sendStatus(200), 3);
-  },
+    setTimeout(() => res.sendStatus(200), 33);
+  }
 }
