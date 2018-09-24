@@ -1,6 +1,6 @@
 function Node(path) {
-  this.path = path;
-  this.childRoutes = [];
+  this.name = path;
+  this.children = [];
   this.methods = {};
 }
 
@@ -15,7 +15,7 @@ function Tree(path) {
 
 Tree.prototype.traverseDFS = function(callback) {
   (function recurse(currentNode) {
-    currentNode.childRoutes.forEach(child => {
+    currentNode.children.forEach(child => {
       recurse(child);
     });
     callback(currentNode);
@@ -26,7 +26,7 @@ Tree.prototype.traverseBFS = function(callback) {
   const queue = [this.root];
   while (queue.length) {
     const currentNode = queue.shift();
-    currentNode.childRoutes.forEach(child => {
+    currentNode.children.forEach(child => {
       queue.push(child);
     });
     callback(currentNode);
@@ -37,8 +37,8 @@ Tree.prototype.findBFS = function(path) {
   const queue = [this.root];
   while (queue.length) {
     const node = queue.shift();
-    if (node.path === path) return node;
-    node.childRoutes.forEach(child => {
+    if (node.name === path) return node;
+    node.children.forEach(child => {
       queue.push(child);
     });
   }
@@ -60,8 +60,8 @@ Tree.prototype.add = function(endpoint) {
     if (subPath !== concatPath) {
       concatPath += `/${subPath}`;
       let foundNode = null;
-      currNode.childRoutes.forEach(child => {
-        if (child.path === concatPath) {
+      currNode.children.forEach(child => {
+        if (child.name === concatPath) {
           foundNode = child;
         }
       });
@@ -76,7 +76,7 @@ Tree.prototype.add = function(endpoint) {
       // Otherwise create a new node with concat path, and add to children
       else {
         const newNode = new Node(concatPath);
-        currNode.childRoutes.push(newNode);
+        currNode.children.push(newNode);
         currNode = newNode;
       }
     } 
@@ -90,8 +90,8 @@ Tree.prototype.add = function(endpoint) {
 };
 
 
-Tree.prototype.addPerformace = (performanceNode, reqMethod, perforamce) => {
-  performanceNode.methods[reqMethod].performance.push(perforamce + 'ms');
+Tree.prototype.addPerformance = (performanceNode, reqMethod, performance) => {
+  performanceNode.methods[reqMethod].performance.push(performance + 'ms');
 }
 
 Tree.prototype.remove = function(path) {
