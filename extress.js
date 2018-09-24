@@ -1,60 +1,46 @@
-module.exports = {
-  
-  map: () => {
-    function Node(val) {
-      this.path = val;
-      this.childRoutes = [];
-      this.methods = {};
+const { EventEmitter } = require('events');
+const profiles = new EventEmitter();
+const { performance } = require('perf_hooks');
+const { Tree, Node } = require('./util/Tree');
+const fs = require('fs');
+const requestQueue = [];
+
+
+const Extress = {
+  tree: new Tree(),
+  map: app => {
+
+    function buildTree(stack) {
+      stack.forEach(endpoint => (endpoint.route) ? Extress.tree.add(endpoint.route) : null);
+      return Extress.tree;
     }
 
-    function MiddleWareNode(name) {
-      this.middleWareName = name;
-      this.performance = null;
-    }
-
-    const tree = new Node('/');
-
-    app._router.stack.forEach(endpoint => { 
-      if (endpoint.route) {
-        //.   '/send/it/now'.      ['delet', send', 'it']
-        const splitPath = endpoint.route.path.substring(1).split('/'); //split each full route path into an array of seperate pieces
-        
-        let curr = tree;  //variable used to reset the current tree location to the slash route for each new route
-        splitPath.forEach(subPath => { //loop over each split sub route
-          if (subPath === '') {
-            splitPath.splice(splitPath.indexOf(subPath), 1, '/');
-          }       
-        });
-
-        splitPath.forEach(subPath => { //loop over each split sub route
-          if (curr.path !== subPath) { //check if curr path is equal to route path from split array
-            const filteredChildroute = curr.childRoutes.filter(elem => elem.path === subPath);
-            if (filteredChildroute[0]) { //check if path is included within the children array of curr
-              curr = filteredChildroute[0] //if yes, set that child to the curr
-            } else { //if no, create new node for that val and set it equal to the curr
-              const newNode = new Node(subPath);
-              curr.childRoutes.push(newNode);
-              curr = newNode;
-            }
-          }
-          if (splitPath.indexOf(subPath) === splitPath.length - 1) { //check if current route path is the last in the split array
-            //if it is, we need to add an obj for the method type 
-            const reducedMiddleWare = endpoint.route.stack.reduce((initial, current) => {
-              initial.push(new MiddleWareNode(current.name));
-              return initial
-            }, []);
-            curr.methods[Object.entries(endpoint.route.methods)[0][0]] = {
-              middleWare: reducedMiddleWare,
-              performance: null
-            }; 
-          }
-        })
-      }
-    })
-    return tree
+    buildTree(app._router.stack);
   },
-  wrap: () => {
+  routeTimer: (req, res, next) => {
+    const start = performance.now();
 
-  }
+    res.once('finish', () => {
+      profiles.emit('route', { req, elapsedMS: performance.now() - start });
+    });
 
+    profiles.on('route', ({ req, elapsedMS }) => {
+      const performanceNode = Extress.tree.findBFS(req.originalUrl);
+      Extress.tree.addPerformace(performanceNode, req.method.toLowerCase(), elapsedMS);
+
+      var stream = fs.createWriteStream('index.html');
+      stream.once('open', () => {
+        stream.write(
+          `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><script>const Tree = ${JSON.stringify(
+            Extress.tree
+          )}; window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});</script></body></html>`
+        );
+        stream.end();
+      });
+    });
+
+    next();
+  }, 
 }
+
+module.exports = Extress;
