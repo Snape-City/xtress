@@ -45,7 +45,29 @@ Tree.prototype.contains = function(path) {
 };
 
 Tree.prototype.add = function(path) {
-  // TODO: add node at specific path
+  // Split path into arr of sub-paths, delimeted on '/'
+  const splitPath = path.split('/').slice(1);
+  // Initialize string path to concat with sub-paths as we traverse
+  let concatPath = '';
+  let currNode = this.root;
+  // Loop over each sub-path, concatting it as you go along
+  splitPath.forEach(subPath => {
+    let foundNode = null;
+    concatPath += `/${subPath}`;
+    currNode.childRoutes.forEach(child => {
+      if (child.path === concatPath) {
+        foundNode = child;
+      }
+    });
+    // Set current node to the child node if concat path exists,
+    if (foundNode) currNode = foundNode;
+    // Otherwise create a new node with concat path, and add to children
+    else {
+      const newNode = new Node(concatPath);
+      currNode.childRoutes.push(newNode);
+      currNode = newNode;
+    }
+  });
 };
 
 Tree.prototype.remove = function(path) {
