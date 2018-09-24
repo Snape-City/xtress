@@ -7,7 +7,7 @@
     "extress": "./test.js"
   },
   "scripts": {
-    "start-demo-server": "node test/demo-server.js",
+    "start-demo-server": "nodemon test/demo-server.js",
     "test": "echo test"
   },
   "repository": {
@@ -22,7 +22,8 @@
   "homepage": "https://github.com/Snape-City/extress#readme",
   "devDependencies": {
     "axios": "^0.18.0",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "nodemon": "^1.18.4"
   },
   "dependencies": {}
 }

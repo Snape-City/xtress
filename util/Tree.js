@@ -70,7 +70,7 @@ Tree.prototype.add = function(endpoint) {
         currNode = foundNode;
         // Add method at found location
         currNode.methods[Object.keys(endpoint.methods)[0]] = {
-          performance: null
+          performance: []
         };
       }
       // Otherwise create a new node with concat path, and add to children
@@ -83,15 +83,15 @@ Tree.prototype.add = function(endpoint) {
     // Handle requests to root
     else {
       currNode.methods[Object.keys(endpoint.methods)[0]] = {
-          performance: null
+          performance: []
         };
     }
   });
 };
 
 
-Tree.prototype.addMethod = (methods) => {
-
+Tree.prototype.addPerformace = (performanceNode, reqMethod, perforamce) => {
+  performanceNode.methods[reqMethod].performance.push(perforamce + 'ms');
 }
 
 Tree.prototype.remove = function(path) {
