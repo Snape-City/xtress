@@ -7,6 +7,7 @@
     "extress": "./test.js"
   },
   "scripts": {
+    "start-demo-server": "node test/demo-server.js",
     "test": "echo test"
   },
   "repository": {
