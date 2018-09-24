@@ -4,6 +4,11 @@ function Node(path) {
   this.methods = {};
 }
 
+function MiddleWareNode(name) {
+  this.middleWareName = name;
+  this.performance = null;
+}
+
 function Tree(path) {
   this.root = new Node(path || '');
 }
@@ -44,31 +49,50 @@ Tree.prototype.contains = function(path) {
   return this.findBFS(path) ? true : false;
 };
 
-Tree.prototype.add = function(path) {
+Tree.prototype.add = function(endpoint) {
   // Split path into arr of sub-paths, delimeted on '/'
-  const splitPath = path.split('/').slice(1);
+  const splitPath = endpoint.path.split('/').slice(1);
   // Initialize string path to concat with sub-paths as we traverse
   let concatPath = '';
   let currNode = this.root;
   // Loop over each sub-path, concatting it as you go along
   splitPath.forEach(subPath => {
-    let foundNode = null;
-    concatPath += `/${subPath}`;
-    currNode.childRoutes.forEach(child => {
-      if (child.path === concatPath) {
-        foundNode = child;
+    if (subPath !== concatPath) {
+      concatPath += `/${subPath}`;
+      let foundNode = null;
+      currNode.childRoutes.forEach(child => {
+        if (child.path === concatPath) {
+          foundNode = child;
+        }
+      });
+      // Set current node to the child node if concat path exists,
+      if (foundNode) {
+        currNode = foundNode;
+        // Add method at found location
+        currNode.methods[Object.keys(endpoint.methods)[0]] = {
+          performance: null
+        };
       }
-    });
-    // Set current node to the child node if concat path exists,
-    if (foundNode) currNode = foundNode;
-    // Otherwise create a new node with concat path, and add to children
+      // Otherwise create a new node with concat path, and add to children
+      else {
+        const newNode = new Node(concatPath);
+        currNode.childRoutes.push(newNode);
+        currNode = newNode;
+      }
+    } 
+    // Handle requests to root
     else {
-      const newNode = new Node(concatPath);
-      currNode.childRoutes.push(newNode);
-      currNode = newNode;
+      currNode.methods[Object.keys(endpoint.methods)[0]] = {
+          performance: null
+        };
     }
   });
 };
+
+
+Tree.prototype.addMethod = (methods) => {
+
+}
 
 Tree.prototype.remove = function(path) {
   // TODO: remove node at specific path
