@@ -26,3 +26,4 @@ config.requests.forEach(request => {
   }
 });
 axios.all(promiseArr).then(console.log('all requests have been processed!'));
+
