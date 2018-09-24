@@ -1,6 +1,6 @@
 function Node(path) {
-  this.path = path;
-  this.childRoutes = [];
+  this.name = path;
+  this.children = [];
   this.methods = {};
 }
 
