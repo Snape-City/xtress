@@ -61,6 +61,6 @@ app.put('/heavily/nexted/trash/routes', dummyController3.mw1, dummyController1.m
 app.delete('/heavily/nexted/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
 app.listen(PORT,
-  app.extress.map(app), 
+  app.extress.map(app),
   console.log(`Listening on ${PORT}`)
 )

@@ -76,15 +76,18 @@ const Extress = {
     let currNode = Extress.tree.root;
 
     routeSearcher = (currNode, elapsedMS) => {
-      if (currNode.path === req.originalUrl.substring(1).split('/')[req.originalUrl.substring(1).split('/').length - 1])
+      if (currNode.path === req.originalUrl.substring(1).split('/')[req.originalUrl.substring(1).split('/').length - 1]) {
+        console.log('hello')
         addPerformanceData(currNode, elapsedMS);
-      for (let i = 0; i < currNode.childRoutes.length; i += 1) {
-        if (splitRoute[0] === currNode.childRoutes[i].path) {
-          // determine if there is a match
-          currNode = currNode.childRoutes[i];
-          if (splitRoute.length > 0) {
-            splitRoute.shift();
-            routeSearcher(currNode, elapsedMS); // if there are more items in the split route, keep digging...
+      } else {
+         for (let i = 0; i < currNode.childRoutes.length; i += 1) {
+          if (splitRoute[0] === currNode.childRoutes[i].path) {
+            // determine if there is a match
+            currNode = currNode.childRoutes[i];
+            if (splitRoute.length > 0) {
+              splitRoute.shift();
+              routeSearcher(currNode, elapsedMS); // if there are more items in the split route, keep digging...
+            }
           }
         }
       }
@@ -106,7 +109,18 @@ const Extress = {
     };
 
     next();
+  }, 
+  socket: (app) => {
+    var expressWs = require('express-ws')(app);
+    app.ws('/', function(ws, req) {
+      ws.on('message', function(msg) {
+        console.log(msg);
+      });
+      console.log('socket', req.testing);
+    });
+     
+    app.listen(4050, console.log('listening on 4050'));
   }
-};
+}
 
 module.exports = Extress;

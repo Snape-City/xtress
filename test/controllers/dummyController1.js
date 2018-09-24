@@ -13,6 +13,6 @@ module.exports = {
   },
   mwLast: (req, res, next) => {
     console.log('running mwLast => (Controller 1)');
-    setTimeout(() => res.sendStatus(200), 5841);
+    res.sendStatus(200);
   }
 }
