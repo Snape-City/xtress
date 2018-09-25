@@ -5,13 +5,11 @@ const { Tree, Node } = require('./util/Tree');
 const fs = require('fs');
 const requestQueue = [];
 
-
 const Extress = {
   tree: new Tree(),
   map: app => {
-
     function buildTree(stack) {
-      stack.forEach(endpoint => (endpoint.route) ? Extress.tree.add(endpoint.route) : null);
+      stack.forEach(endpoint => (endpoint.route ? Extress.tree.add(endpoint.route) : null));
       return Extress.tree;
     }
 
@@ -27,11 +25,15 @@ const Extress = {
     profiles.on('route', ({ req, elapsedMS }) => {
       const performanceNode = Extress.tree.findBFS(req.originalUrl);
       Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), elapsedMS);
+    });
 
-      var stream = fs.createWriteStream('index.html');
-      stream.once('open', () => {
-        stream.write(
-          `<!DOCTYPE html>
+    next();
+  },
+  generateReport: () => {
+    var stream = fs.createWriteStream('index.html');
+    stream.once('open', () => {
+      stream.write(
+        `<!DOCTYPE html>
             <html lang="en">
               <head>
                 <meta charset="utf-8">
@@ -206,13 +208,10 @@ const Extress = {
                 </script>
               </body>
             </html>`
-        );
-        stream.end();
-      });
+      );
+      stream.end();
     });
-
-    next();
-  }, 
-}
+  }
+};
 
 module.exports = Extress;

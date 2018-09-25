@@ -10,7 +10,7 @@ function MiddleWareNode(name) {
 }
 
 function Tree(path) {
-  this.root = new Node(path || '');
+  this.root = new Node(path || '/');
 }
 
 Tree.prototype.traverseDFS = function(callback) {
@@ -79,20 +79,23 @@ Tree.prototype.add = function(endpoint) {
         currNode.children.push(newNode);
         currNode = newNode;
       }
-    } 
+    }
     // Handle requests to root
     else {
       currNode.methods[Object.keys(endpoint.methods)[0]] = {
-          performance: []
-        };
+        performance: []
+      };
     }
   });
 };
 
-
 Tree.prototype.addPerformance = (performanceNode, reqMethod, performance) => {
-  performanceNode.methods[reqMethod].performance.push(performance + 'ms');
-}
+  if (!performanceNode.methods[reqMethod]) {
+    performanceNode.methods[reqMethod] = {
+      performance: [performance + 'ms']
+    };
+  } else performanceNode.methods[reqMethod].performance.push(performance + 'ms');
+};
 
 Tree.prototype.remove = function(path) {
   // TODO: remove node at specific path
