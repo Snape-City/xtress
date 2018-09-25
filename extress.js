@@ -3,14 +3,17 @@ const profiles = new EventEmitter();
 const { performance } = require('perf_hooks');
 const { Tree, Node } = require('./util/Tree');
 const fs = require('fs');
-const requestQueue = [];
 
 const Extress = {
   tree: new Tree(),
   map: app => {
     function buildTree(stack) {
+<<<<<<< HEAD
       stack.forEach(endpoint => (endpoint.route ? Extress.tree.add(endpoint.route) : null));
       return Extress.tree;
+=======
+      stack.forEach(endpoint => (endpoint.route) ? Extress.tree.add(endpoint.route) : null);
+>>>>>>> 995f21a78d17d7bc9e7dcc05f307bbd4c7137a14
     }
 
     buildTree(app._router.stack);
@@ -18,14 +21,15 @@ const Extress = {
   routeTimer: (req, res, next) => {
     const start = performance.now();
 
-    res.once('finish', () => {
-      profiles.emit('route', { req, elapsedMS: performance.now() - start });
-    });
 
-    profiles.on('route', ({ req, elapsedMS }) => {
+    res.once('finish', () => {
       const performanceNode = Extress.tree.findBFS(req.originalUrl);
+<<<<<<< HEAD
       Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), elapsedMS);
     });
+=======
+      Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
+>>>>>>> 995f21a78d17d7bc9e7dcc05f307bbd4c7137a14
 
     next();
   },
@@ -208,10 +212,17 @@ const Extress = {
                 </script>
               </body>
             </html>`
+<<<<<<< HEAD
       );
       stream.end();
     });
   }
 };
+=======
+        );
+        stream.end();
+      });
+    })
+>>>>>>> 995f21a78d17d7bc9e7dcc05f307bbd4c7137a14
 
 module.exports = Extress;

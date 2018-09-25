@@ -200,9 +200,9 @@ app.post('/api', dummyController1.mw1, dummyController1.mw2, dummyController1.mw
 app.put('/api', dummyController4.mw5, dummyController1.mw2, dummyController4.mw7, dummyController1.mwLast);
 app.delete('/api', dummyController1.mw1, dummyController4.mw5, dummyController4.mw3, dummyController1.mwLast);
 
-app.get('/heavily/nexted/trash/routes', dummyController1.mw1, dummyController1.mwLast);
-app.post('/heavily/nexted/trash/routes', dummyController2.mw1, dummyController1.mwLast);
-app.put('/heavily/nexted/trash/routes', dummyController3.mw1, dummyController1.mwLast);
-app.delete('/heavily/nexted/trash/routes', dummyController4.mw1, dummyController1.mwLast);
+app.get('/heavily/nested/trash/routes', dummyController1.mw1, dummyController1.mwLast);
+app.post('/heavily/nested/trash/routes', dummyController2.mw1, dummyController1.mwLast);
+app.put('/heavily/nested/trash/routes', dummyController3.mw1, dummyController1.mwLast);
+app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
 app.listen(PORT, extress.map(app), console.log(`Listening on ${PORT}`));
