@@ -1,60 +1,213 @@
-module.exports = {
-  
-  map: () => {
-    function Node(val) {
-      this.path = val;
-      this.childRoutes = [];
-      this.methods = {};
+const { EventEmitter } = require('events');
+const profiles = new EventEmitter();
+const { performance } = require('perf_hooks');
+const { Tree, Node } = require('./util/Tree');
+const fs = require('fs');
+
+
+const Extress = {
+  tree: new Tree(),
+  map: app => {
+
+    function buildTree(stack) {
+      stack.forEach(endpoint => (endpoint.route) ? Extress.tree.add(endpoint.route) : null);
     }
 
-    function MiddleWareNode(name) {
-      this.middleWareName = name;
-      this.performance = null;
-    }
-
-    const tree = new Node('/');
-
-    app._router.stack.forEach(endpoint => { 
-      if (endpoint.route) {
-        //.   '/send/it/now'.      ['delet', send', 'it']
-        const splitPath = endpoint.route.path.substring(1).split('/'); //split each full route path into an array of seperate pieces
-        
-        let curr = tree;  //variable used to reset the current tree location to the slash route for each new route
-        splitPath.forEach(subPath => { //loop over each split sub route
-          if (subPath === '') {
-            splitPath.splice(splitPath.indexOf(subPath), 1, '/');
-          }       
-        });
-
-        splitPath.forEach(subPath => { //loop over each split sub route
-          if (curr.path !== subPath) { //check if curr path is equal to route path from split array
-            const filteredChildroute = curr.childRoutes.filter(elem => elem.path === subPath);
-            if (filteredChildroute[0]) { //check if path is included within the children array of curr
-              curr = filteredChildroute[0] //if yes, set that child to the curr
-            } else { //if no, create new node for that val and set it equal to the curr
-              const newNode = new Node(subPath);
-              curr.childRoutes.push(newNode);
-              curr = newNode;
-            }
-          }
-          if (splitPath.indexOf(subPath) === splitPath.length - 1) { //check if current route path is the last in the split array
-            //if it is, we need to add an obj for the method type 
-            const reducedMiddleWare = endpoint.route.stack.reduce((initial, current) => {
-              initial.push(new MiddleWareNode(current.name));
-              return initial
-            }, []);
-            curr.methods[Object.entries(endpoint.route.methods)[0][0]] = {
-              middleWare: reducedMiddleWare,
-              performance: null
-            }; 
-          }
-        })
-      }
-    })
-    return tree
+    buildTree(app._router.stack);
   },
-  wrap: () => {
+  routeTimer: (req, res, next) => {
+    const start = performance.now();
 
-  }
 
+    res.once('finish', () => {
+      const performanceNode = Extress.tree.findBFS(req.originalUrl);
+      Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
+
+      var stream = fs.createWriteStream('index.html');
+      stream.once('open', () => {
+        stream.write(
+          `<!DOCTYPE html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8">
+            
+                <title>Tree Example</title>
+            
+                <style>
+              
+              .node {
+                cursor: pointer;
+              }
+            
+              .node circle {
+                fill: #fff;
+                stroke: steelblue;
+                stroke-width: 3px;
+              }
+            
+              .node text {
+                font: 12px sans-serif;
+              }
+            
+              .link {
+                fill: none;
+                stroke: #ccc;
+                stroke-width: 2px;
+              }
+              
+                </style>
+            
+              </head>
+            
+              <body>
+            
+            <!-- load the d3.js library -->	
+            <script src="http://d3js.org/d3.v3.min.js"></script>
+              
+            <script>
+            
+            const Tree = [${JSON.stringify(Extress.tree)}]
+            
+            // ************** Generate the tree diagram	 *****************
+            var margin = {top: 20, right: 120, bottom: 20, left: 120},
+              width = 960 - margin.right - margin.left,
+              height = 500 - margin.top - margin.bottom;
+              
+            var i = 0,
+              duration = 750,
+              root;
+            
+            var tree = d3.layout.tree()
+              .size([height, width]);
+            
+            var diagonal = d3.svg.diagonal()
+              .projection(function(d) { return [d.y, d.x]; });
+            
+            var svg = d3.select("body").append("svg")
+              .attr("width", width + margin.right + margin.left)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            
+            root = Tree[0].root;
+            root.x0 = height / 2;
+            root.y0 = 0;
+              
+            update(root);
+            
+            d3.select(self.frameElement).style("height", "500px");
+            
+            function update(source) {
+            
+              // Compute the new tree layout.
+              var nodes = tree.nodes(root).reverse(),
+                links = tree.links(nodes);
+            
+              // Normalize for fixed-depth.
+              nodes.forEach(function(d) { d.y = d.depth * 180; });
+            
+              // Update the nodes…
+              var node = svg.selectAll("g.node")
+                .data(nodes, function(d) { return d.id || (d.id = ++i); });
+            
+              // Enter any new nodes at the parent's previous position.
+              var nodeEnter = node.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                .on("click", click);
+            
+              nodeEnter.append("circle")
+                .attr("r", 1e-6)
+                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+            
+              nodeEnter.append("text")
+                .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+                .attr("dy", ".35em")
+                .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                .text(function(d) { return d.name; })
+                .style("fill-opacity", 1e-6);
+            
+              // Transition nodes to their new position.
+              var nodeUpdate = node.transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+            
+              nodeUpdate.select("circle")
+                .attr("r", 10)
+                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+            
+              nodeUpdate.select("text")
+                .style("fill-opacity", 1);
+            
+              // Transition exiting nodes to the parent's new position.
+              var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                .remove();
+            
+              nodeExit.select("circle")
+                .attr("r", 1e-6);
+            
+              nodeExit.select("text")
+                .style("fill-opacity", 1e-6);
+            
+              // Update the links…
+              var link = svg.selectAll("path.link")
+                .data(links, function(d) { return d.target.id; });
+            
+              // Enter any new links at the parent's previous position.
+              link.enter().insert("path", "g")
+                .attr("class", "link")
+                .attr("d", function(d) {
+                var o = {x: source.x0, y: source.y0};
+                return diagonal({source: o, target: o});
+                });
+            
+              // Transition links to their new position.
+              link.transition()
+                .duration(duration)
+                .attr("d", diagonal);
+            
+              // Transition exiting nodes to the parent's new position.
+              link.exit().transition()
+                .duration(duration)
+                .attr("d", function(d) {
+                var o = {x: source.x, y: source.y};
+                return diagonal({source: o, target: o});
+                })
+                .remove();
+            
+              // Stash the old positions for transition.
+              nodes.forEach(function(d) {
+              d.x0 = d.x;
+              d.y0 = d.y;
+              });
+            }
+            
+            // Toggle children on click.
+            function click(d) {
+                console.log('D bb ===>', d)
+              if (d.children) {
+              d._children = d.children;
+              d.children = null;
+              } else {
+              d.children = d._children;
+              d._children = null;
+              }
+              update(d);
+            }
+            
+            window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});
+                </script>
+              </body>
+            </html>`
+        );
+        stream.end();
+      });
+    })
+
+    next();
+  }, 
 }
+
+module.exports = Extress;

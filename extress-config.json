@@ -1,0 +1,15 @@
+{
+  "requests": [
+    {
+      "method": "GET",
+      "route": "http://localhost:3333/demo",
+      "requestNum": 100
+    },
+    {
+      "method": "POST",
+      "route": "http://localhost:3333/demo",
+      "requestNum": 100
+    }
+
+  ]
+}
