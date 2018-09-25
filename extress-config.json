@@ -3,12 +3,12 @@
     {
       "method": "GET",
       "route": "http://localhost:3333/demo",
-      "requestNum": 10000
+      "requestNum": 100
     },
     {
       "method": "POST",
       "route": "http://localhost:3333/demo",
-      "requestNum": 10000
+      "requestNum": 100
     }
 
   ]
