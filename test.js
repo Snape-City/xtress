@@ -7,7 +7,7 @@ const promPush = (promArr, request) => {
   if (request.method === 'GET') {
     promArr.push(axios.get(request.route));
   } else if (request.method === 'POST') {
-    // TODO
+    promArr.push(axios.post(request.route));
   } else if (request.method === 'PUT') {
     // TODO
   } else if (request.method === 'DELETE') {
