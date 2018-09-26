@@ -11,7 +11,7 @@ app.use(extress.routeTimer);
 
 app.get('/extress', (req, res) => {
   extress.generateReport();
-  console.log('OUTPUT TREE ===>', extress.tree.root.children[1]);
+  console.log('OUTPUT TREE ===>', extress.tree.root);
   res.sendStatus(200);
 });
 
@@ -205,4 +205,7 @@ app.post('/heavily/nested/trash/routes', dummyController2.mw1, dummyController1.
 app.put('/heavily/nested/trash/routes', dummyController3.mw1, dummyController1.mwLast);
 app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
-app.listen(PORT, extress.map(app), console.log(`Listening on ${PORT}`));
+app.listen(PORT, () => {
+  extress.map(app);
+  console.log(`Listening on ${PORT}`);
+});
