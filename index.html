@@ -1,72 +1,4 @@
-const { EventEmitter } = require('events');
-const profiles = new EventEmitter();
-const { performance } = require('perf_hooks');
-const { Tree, Node } = require('./util/Tree');
-const fs = require('fs');
-const express = require('express');
-const opn = require('opn');
-const eapp = express();
-const path = require('path');
-var http = require('http').Server(eapp);
-var io = require('socket.io')(http);
-
-eapp.use(express.static(path.join(__dirname, '/demo/build')));
-
-const Extress = {
-  tree: new Tree(),
-  map: app => {
-
-    function buildTree(stack) {
-      stack.forEach(endpoint => (endpoint.route) ? Extress.tree.add(endpoint.route) : null);
-    }
-
-    buildTree(app._router.stack);
-  },
-  proxy: () => {
-    http.listen(4050, console.log(`listening on port 4050`));
-  },
-  gui: () => {
-   opn(`http://localhost:4050/`).then(cp => console.log('child process:', cp)).catch(console.error)
- },
- socket: () => {
-
-    io.on('connection', (socket) => {
-      console.log('a user connected');
-
-      socket.on('disconnect', () => {
-        console.log('user disconnected');
-      });
-
-      socket.on('data', tree => {
-        console.log('tree', tree)
-      })
-
-      setTimeout(() => {
-        socket.emit('data', {
-          data: Extress.tree
-        })
-      }, 500)
-    });
-
-    // io.on('connection', function(socket){
-    //   socket.on('chat message', function(msg){
-    //     console.log('message: ' + msg);
-    //   });
-    // });
-
- },
-  routeTimer: (req, res, next) => {
-    const start = performance.now();
-
-
-    res.once('finish', () => {
-      const performanceNode = Extress.tree.findBFS(req.originalUrl);
-      Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
-
-      var stream = fs.createWriteStream('index.html');
-      stream.once('open', () => {
-        stream.write(
-          `<!DOCTYPE html>
+<!DOCTYPE html>
             <html lang="en">
               <head>
                 <meta charset="utf-8">
@@ -106,7 +38,7 @@ const Extress = {
               
             <script>
             
-            const Tree = [${JSON.stringify(Extress.tree)}]
+            const Tree = [{"root":{"name":"/","children":[{"name":"/demo","children":[{"name":"/demo/example","children":[{"name":"/demo/example/2","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/demo/example/randomMiddleware","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{}}],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/test","children":[{"name":"/test/example","children":[{"name":"/test/example/randomMiddleware","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/users","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/api","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/heavily","children":[{"name":"/heavily/nested","children":[{"name":"/heavily/nested/trash","children":[{"name":"/heavily/nested/trash/routes","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{}}],"methods":{}}],"methods":{}}],"methods":{"get":{"performance":["4492.261192977428ms"]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}}]
             
             // ************** Generate the tree diagram	 *****************
             var margin = {top: 20, right: 120, bottom: 20, left: 120},
@@ -240,15 +172,4 @@ const Extress = {
             window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});
                 </script>
               </body>
-            </html>`
-        );
-        stream.end();
-      });
-    })
-
-    next();
-  }, 
-}
-
-
-module.exports = Extress;
+            </html>

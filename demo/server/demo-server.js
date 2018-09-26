@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-app.extress = require('../extress');
+const path = require('path');
+
+app.extress = require('../../extress');
 const dummyController1 = require('./controllers/dummyController1');
 const dummyController2 = require('./controllers/dummyController2');
 const dummyController3 = require('./controllers/dummyController3');
@@ -62,5 +64,8 @@ app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController
 
 app.listen(PORT,
   app.extress.map(app),
+  app.extress.proxy(),
+  app.extress.gui(),
+  app.extress.socket(),
   console.log(`Listening on ${PORT}`)
 )

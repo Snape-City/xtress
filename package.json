@@ -7,7 +7,7 @@
     "extress": "./test.js"
   },
   "scripts": {
-    "start-demo-server": "nodemon test/demo-server.js",
+    "start-demo-server": "nodemon demo/server/demo-server.js",
     "test": "echo test"
   },
   "repository": {
@@ -25,5 +25,8 @@
     "express": "^4.16.3",
     "nodemon": "^1.18.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "opn": "^5.4.0",
+    "socket.io": "^2.1.1"
+  }
 }
