@@ -1,7 +1,7 @@
 module.exports = {
   mw1: (req, res, next) => {
     console.log('running mw1 => (Controller 1)');
-    setTimeout(() => next(), 600)
+    setTimeout(() => next(), 1600)
   }, 
   mw2: (req, res, next) => {
     console.log('running mw2 => (Controller 1)');

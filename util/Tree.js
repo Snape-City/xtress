@@ -10,7 +10,7 @@ function MiddleWareNode(name) {
 }
 
 function Tree(path) {
-  this.root = new Node(path || '');
+  this.root = new Node(path || '/');
 }
 
 Tree.prototype.traverseDFS = function(callback) {
@@ -55,38 +55,32 @@ Tree.prototype.add = function(endpoint) {
   // Initialize string path to concat with sub-paths as we traverse
   let concatPath = '';
   let currNode = this.root;
+
   // Loop over each sub-path, concatting it as you go along
   splitPath.forEach(subPath => {
     if (subPath !== concatPath) {
       concatPath += `/${subPath}`;
       let foundNode = null;
+      // Searching through all possible children routes that currently exist
       currNode.children.forEach(child => {
-        if (child.name === concatPath) {
-          foundNode = child;
-        }
+        if (child.name === concatPath) foundNode = child;
       });
       // Set current node to the child node if concat path exists,
-      if (foundNode) {
-        currNode = foundNode;
-        // Add method at found location
-        currNode.methods[Object.keys(endpoint.methods)[0]] = {
-          performance: []
-        };
-      }
+      if (foundNode) currNode = foundNode;
       // Otherwise create a new node with concat path, and add to children
       else {
         const newNode = new Node(concatPath);
         currNode.children.push(newNode);
         currNode = newNode;
-      }
-    } 
-    // Handle requests to root
-    else {
-      currNode.methods[Object.keys(endpoint.methods)[0]] = {
-          performance: []
-        };
+      } 
     }
   });
+
+  if (concatPath === splitPath[0] || concatPath === endpoint.path) {
+    currNode.methods[Object.keys(endpoint.methods)[0]] = {
+      performance: []
+    };
+  } 
 };
 
 
