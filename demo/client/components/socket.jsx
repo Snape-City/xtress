@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 class Sock extends Component {
   constructor(props) {
     super(props);
+    this.state = {tree: null}
   }
   
   componentDidMount() {
@@ -13,8 +14,11 @@ class Sock extends Component {
       })
     }, 5000);
 
-    socket.on('data', tree => {
-      console.log('tree', tree)
+    socket.on('data', data => {
+      this.setState(state => {
+        return {tree: JSON.stringify(data)}
+      })
+      console.log('treeeeee', this.state.tree)
     })
   }
 
@@ -22,6 +26,7 @@ class Sock extends Component {
     return (
       <div>
         here
+        <p>{this.state.tree}</p>
       </div>
     )
   }

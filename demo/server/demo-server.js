@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+var cors = require('cors')
 
 app.extress = require('../../extress');
 const dummyController1 = require('./controllers/dummyController1');
@@ -10,7 +11,7 @@ const dummyController4 = require('./controllers/dummyController4');
 const PORT = 3333;
 
 app.use(app.extress.routeTimer)
-
+app.use(cors())
 
 app.get('/', dummyController1.mw1, dummyController1.mw2, dummyController1.mw3, dummyController1.mwLast);
 app.post('/', dummyController1.mw1, dummyController1.mw2, dummyController1.mw3, dummyController1.mwLast);
