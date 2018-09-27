@@ -1,0 +1,212 @@
+[{
+  "name": "/",
+  "children": [{
+    "name": "/demo",
+    "children": [{
+      "name": "/demo/example",
+      "children": [{
+        "name": "/demo/example/2",
+        "children": [],
+        "methods": {
+          "post": {
+            "performance": []
+          },
+          "put": {
+            "performance": []
+          },
+          "delete": {
+            "performance": []
+          }
+        }
+      }, {
+        "name": "/demo/example/randomMiddleware",
+        "children": [],
+        "methods": {
+          "post": {
+            "performance": []
+          },
+          "put": {
+            "performance": []
+          },
+          "delete": {
+            "performance": []
+          }
+        }
+      }],
+      "methods": {
+        "post": {
+          "performance": []
+        },
+        "put": {
+          "performance": []
+        },
+        "delete": {
+          "performance": []
+        },
+        "get": {
+          "performance": []
+        }
+      }
+    }],
+    "methods": {
+      "post": {
+        "performance": []
+      },
+      "put": {
+        "performance": []
+      },
+      "delete": {
+        "performance": []
+      },
+      "get": {
+        "performance": ["7885.073195010424ms"]
+      }
+    }
+  }, {
+    "name": "/test",
+    "children": [{
+      "name": "/test/example",
+      "children": [{
+        "name": "/test/example/randomMiddleware",
+        "children": [],
+        "methods": {
+          "post": {
+            "performance": []
+          },
+          "put": {
+            "performance": []
+          },
+          "delete": {
+            "performance": []
+          }
+        }
+      }],
+      "methods": {
+        "post": {
+          "performance": []
+        },
+        "put": {
+          "performance": []
+        },
+        "delete": {
+          "performance": []
+        },
+        "get": {
+          "performance": []
+        }
+      }
+    }],
+    "methods": {
+      "post": {
+        "performance": []
+      },
+      "put": {
+        "performance": []
+      },
+      "delete": {
+        "performance": []
+      },
+      "get": {
+        "performance": []
+      }
+    }
+  }, {
+    "name": "/users",
+    "children": [],
+    "methods": {
+      "post": {
+        "performance": []
+      },
+      "put": {
+        "performance": []
+      },
+      "delete": {
+        "performance": []
+      }
+    }
+  }, {
+    "name": "/api",
+    "children": [],
+    "methods": {
+      "post": {
+        "performance": []
+      },
+      "put": {
+        "performance": []
+      },
+      "delete": {
+        "performance": []
+      }
+    }
+  }, {
+    "name": "/heavily",
+    "children": [{
+      "name": "/heavily/nexted",
+      "children": [{
+        "name": "/heavily/nexted/trash",
+        "children": [{
+          "name": "/heavily/nexted/trash/routes",
+          "children": [],
+          "methods": {
+            "post": {
+              "performance": []
+            },
+            "put": {
+              "performance": []
+            },
+            "delete": {
+              "performance": []
+            }
+          }
+        }],
+        "methods": {
+          "post": {
+            "performance": []
+          },
+          "put": {
+            "performance": []
+          },
+          "delete": {
+            "performance": []
+          }
+        }
+      }],
+      "methods": {
+        "post": {
+          "performance": []
+        },
+        "put": {
+          "performance": []
+        },
+        "delete": {
+          "performance": []
+        }
+      }
+    }],
+    "methods": {
+      "post": {
+        "performance": []
+      },
+      "put": {
+        "performance": []
+      },
+      "delete": {
+        "performance": []
+      }
+    }
+  }],
+  "methods": {
+    "get": {
+      "performance": []
+    },
+    "post": {
+      "performance": []
+    },
+    "put": {
+      "performance": []
+    },
+    "delete": {
+      "performance": []
+    }
+  }
+}]
