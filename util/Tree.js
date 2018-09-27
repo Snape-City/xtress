@@ -4,11 +4,6 @@ function Node(path) {
   this.methods = {};
 }
 
-function MiddleWareNode(name) {
-  this.middleWareName = name;
-  this.performance = null;
-}
-
 function Tree(path) {
   this.root = new Node(path || '/');
 }
@@ -86,7 +81,7 @@ Tree.prototype.add = function(endpoint) {
 Tree.prototype.addPerformance = (performanceNode, reqMethod, performance) => {
   if (!performanceNode.methods[reqMethod]) {
     performanceNode.methods[reqMethod] = {
-      performance: [performance + 'ms']
+      performance: [performance]
     };
   } else performanceNode.methods[reqMethod].performance.push(performance + 'ms');
 };
