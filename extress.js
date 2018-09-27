@@ -1,7 +1,7 @@
-const { EventEmitter } = require('events');
-const profiles = new EventEmitter();
+// const { EventEmitter } = require('events');
+// const profiles = new EventEmitter();
 const { performance } = require('perf_hooks');
-const { Tree, Node } = require('./util/Tree');
+const { Tree } = require('./util/Tree');
 const fs = require('fs');
 
 const Extress = {
