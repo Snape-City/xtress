@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-var cors = require('cors')
-
+const cors = require('cors')
 app.extress = require('../../extress');
+
 const dummyController1 = require('./controllers/dummyController1');
 const dummyController2 = require('./controllers/dummyController2');
 const dummyController3 = require('./controllers/dummyController3');

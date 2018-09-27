@@ -7,8 +7,8 @@ const express = require('express');
 const opn = require('opn');
 const eapp = express();
 const path = require('path');
-var http = require('http').Server(eapp);
-var io = require('socket.io')(http);
+const http = require('http').Server(eapp);
+const io = require('socket.io')(http);
 
 
 eapp.use(express.static(path.join(__dirname, '/demo/build')));
@@ -24,13 +24,16 @@ const Extress = {
 
     buildTree(app._router.stack);
   },
+
   proxy: () => {
     http.listen(65534, console.log(`listening on port 65534`));
   },
+
   gui: () => {
    opn(`http://localhost:65534/`)
    // .then(cp => console.log('child process:', cp)).catch(console.error)
  },
+
  socket: () => {
 
     io.on('connection', (socket) => {
@@ -46,11 +49,9 @@ const Extress = {
 
       // Create func to watch tree for changes
         // On change - emit tree
-      setTimeout(() => {
-        socket.emit('data', {
-          data: Extress.tree
-        })
-      }, 500)
+      socket.emit('data', {
+        data: Extress.tree
+      })
     });
  },
   routeTimer: (req, res, next) => {
@@ -59,7 +60,13 @@ const Extress = {
     res.once('finish', () => {
       const performanceNode = Extress.tree.findBFS(req.originalUrl);
       Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
-
+      io.emit( 'data', Extress.tree )
+      // io.on('connection', (socket) => {
+      //   console.log('User connected in route timer...')
+      //   socket.emit('data', {
+      //     data: Extress.tree
+      //   })
+      // })
       // var stream = fs.createWriteStream('index.html');
       // stream.once('open', () => {
       //   stream.write(

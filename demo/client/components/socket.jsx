@@ -36,4 +36,4 @@ class Sock extends Component {
 
 
 
-export default Sock
+export default Sock;
