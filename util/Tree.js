@@ -72,7 +72,7 @@ Tree.prototype.add = function(endpoint) {
         const newNode = new Node(concatPath);
         currNode.children.push(newNode);
         currNode = newNode;
-      } 
+      }
     }
   });
 
@@ -80,13 +80,16 @@ Tree.prototype.add = function(endpoint) {
     currNode.methods[Object.keys(endpoint.methods)[0]] = {
       performance: []
     };
-  } 
+  }
 };
 
-
 Tree.prototype.addPerformance = (performanceNode, reqMethod, performance) => {
-  performanceNode.methods[reqMethod].performance.push(performance + 'ms');
-}
+  if (!performanceNode.methods[reqMethod]) {
+    performanceNode.methods[reqMethod] = {
+      performance: [performance + 'ms']
+    };
+  } else performanceNode.methods[reqMethod].performance.push(performance + 'ms');
+};
 
 Tree.prototype.remove = function(path) {
   // TODO: remove node at specific path
