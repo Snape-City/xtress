@@ -3,9 +3,17 @@ const axios = require('axios');
 const config = require('./extress-config.json');
 
 // Helper method for pushing promise into array
-const promPush = (promArr, request) => {
+const promPush = (promArr, request, i) => {
   if (request.method === 'GET') {
-    promArr.push(axios.get(request.route));
+    if (i === request.requestNum - 1) {
+      promArr.push(axios.get(request.route), {
+        headers: {
+            'XTRESSSSSSSSSS': 'application/json',
+        }
+      });
+    } else {
+      promArr.push(axios.get(request.route));
+    }
   } else if (request.method === 'POST') {
     promArr.push(axios.post(request.route));
   } else if (request.method === 'PUT') {
@@ -22,7 +30,7 @@ const promPush = (promArr, request) => {
 const promiseArr = [];
 config.requests.forEach(request => {
   for (let i = 0; i < request.requestNum; i++) {
-    promPush(promiseArr, request);
+    promPush(promiseArr, request, i);
   }
 });
 axios.all(promiseArr).then(console.log('all requests have been processed!'));

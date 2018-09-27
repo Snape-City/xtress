@@ -1,5 +1,5 @@
 node_modules/
-demo/node_modules/
+gui/node_modules/
 package-lock.json
-demo/package-lock.json
-demo/build/bundle.js
+gui/package-lock.json
+gui/build/bundle.js

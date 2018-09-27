@@ -7,7 +7,6 @@ class Sock extends Component {
   }
   
   componentDidMount() {
-    // You can use the socket inside the componet
     setTimeout(() => {
       socket.emit('data', {
         data: 'socket from client'
@@ -18,7 +17,6 @@ class Sock extends Component {
       this.setState(state => {
         return {tree: JSON.stringify(data)}
       })
-      console.log('treeeeee', this.state.tree)
     })
   }
 

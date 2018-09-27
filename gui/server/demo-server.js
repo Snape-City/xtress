@@ -65,8 +65,5 @@ app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController
 
 app.listen(PORT,
   app.extress.map(app),
-  app.extress.proxy(),
-  app.extress.gui(),
-  app.extress.socket(),
   console.log(`Listening on ${PORT}`)
 )

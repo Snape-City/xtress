@@ -1,5 +1,4 @@
 const { EventEmitter } = require('events');
-// const profiles = new EventEmitter();
 const { performance } = require('perf_hooks');
 const { Tree, Node } = require('./util/Tree');
 const fs = require('fs');
@@ -9,9 +8,11 @@ const eapp = express();
 const path = require('path');
 const http = require('http').Server(eapp);
 const io = require('socket.io')(http);
+const axios = require('axios');
+const bodyParser = require('body-parser');
 
-
-eapp.use(express.static(path.join(__dirname, '/demo/build')));
+eapp.use(bodyParser.json());
+eapp.use(express.static(path.join(__dirname, '/gui/build')));
 
 
 const Extress = {
@@ -23,19 +24,12 @@ const Extress = {
     }
 
     buildTree(app._router.stack);
-  },
+    axios.post('http://localhost:4050/finished', Extress.tree);
 
+  },
   proxy: () => {
-    http.listen(65534, console.log(`listening on port 65534`));
-  },
-
-  gui: () => {
-   opn(`http://localhost:65534/`)
-   // .then(cp => console.log('child process:', cp)).catch(console.error)
- },
-
- socket: () => {
-
+    http.listen(4050, console.log(`listening on port 4050`));
+    opn(`http://localhost:4050/`)
     io.on('connection', (socket) => {
       console.log('a user connected');
 
@@ -43,16 +37,43 @@ const Extress = {
         console.log('user disconnected');
       });
 
-      socket.on('data', tree => {
-        console.log('tree', tree)
+      socket.on('config', (config) => {
+        const promPush = (promArr, request, index) => {
+          if (request.method === 'GET') {
+            if (index === request.requestNum - 1) {
+              promArr.push(axios.get(request.route, { headers: { XtressFina: true, }}));
+            } else {
+              promArr.push(axios.get(request.route));
+            }
+          } else if (request.method === 'POST') {
+            promArr.push(axios.post(request.route));
+          } else if (request.method === 'PUT') {
+            // TODO
+          } else if (request.method === 'DELETE') {
+            // TODO
+          } else if (request.method === 'PATCH') {
+            // TODO
+          } else {
+            return 'Invalid HTTP method!';
+          }
+        };
+
+        const promiseArr = [];
+        config.config.forEach(request => {
+          for (let i = 0; i < request.requestNum; i++) {
+            promPush(promiseArr, request, i);
+          }
+        });
+        axios.all(promiseArr).then(console.log('all requests have been processed!'));
+
       })
 
-      // Create func to watch tree for changes
-        // On change - emit tree
+    setTimeout(() => {
       socket.emit('data', {
         data: Extress.tree
-      })
-    });
+      }), 5000
+    })
+  })
  },
   routeTimer: (req, res, next) => {
     const start = performance.now();
@@ -60,199 +81,18 @@ const Extress = {
     res.once('finish', () => {
       const performanceNode = Extress.tree.findBFS(req.originalUrl);
       Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
-      io.emit( 'data', Extress.tree )
-      // io.on('connection', (socket) => {
-      //   console.log('User connected in route timer...')
-      //   socket.emit('data', {
-      //     data: Extress.tree
-      //   })
-      // })
-      // var stream = fs.createWriteStream('index.html');
-      // stream.once('open', () => {
-      //   stream.write(
-      //     `<!DOCTYPE html>
-      //       <html lang="en">
-      //         <head>
-      //           <meta charset="utf-8">
-            
-      //           <title>Tree Example</title>
-            
-      //           <style>
-              
-      //         .node {
-      //           cursor: pointer;
-      //         }
-            
-      //         .node circle {
-      //           fill: #fff;
-      //           stroke: steelblue;
-      //           stroke-width: 3px;
-      //         }
-            
-      //         .node text {
-      //           font: 12px sans-serif;
-      //         }
-            
-      //         .link {
-      //           fill: none;
-      //           stroke: #ccc;
-      //           stroke-width: 2px;
-      //         }
-              
-      //           </style>
-            
-      //         </head>
-            
-      //         <body>
-            
-      //       <!-- load the d3.js library -->	
-      //       <script src="http://d3js.org/d3.v3.min.js"></script>
-              
-      //       <script>
-            
-      //       const Tree = [${JSON.stringify(Extress.tree)}]
-            
-      //       // ************** Generate the tree diagram	 *****************
-      //       var margin = {top: 20, right: 120, bottom: 20, left: 120},
-      //         width = 960 - margin.right - margin.left,
-      //         height = 500 - margin.top - margin.bottom;
-              
-      //       var i = 0,
-      //         duration = 750,
-      //         root;
-            
-      //       var tree = d3.layout.tree()
-      //         .size([height, width]);
-            
-      //       var diagonal = d3.svg.diagonal()
-      //         .projection(function(d) { return [d.y, d.x]; });
-            
-      //       var svg = d3.select("body").append("svg")
-      //         .attr("width", width + margin.right + margin.left)
-      //         .attr("height", height + margin.top + margin.bottom)
-      //         .append("g")
-      //         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-      //       root = Tree[0].root;
-      //       root.x0 = height / 2;
-      //       root.y0 = 0;
-              
-      //       update(root);
-            
-      //       d3.select(self.frameElement).style("height", "500px");
-            
-      //       function update(source) {
-            
-      //         // Compute the new tree layout.
-      //         var nodes = tree.nodes(root).reverse(),
-      //           links = tree.links(nodes);
-            
-      //         // Normalize for fixed-depth.
-      //         nodes.forEach(function(d) { d.y = d.depth * 180; });
-            
-      //         // Update the nodes…
-      //         var node = svg.selectAll("g.node")
-      //           .data(nodes, function(d) { return d.id || (d.id = ++i); });
-            
-      //         // Enter any new nodes at the parent's previous position.
-      //         var nodeEnter = node.enter().append("g")
-      //           .attr("class", "node")
-      //           .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      //           .on("click", click);
-            
-      //         nodeEnter.append("circle")
-      //           .attr("r", 1e-6)
-      //           .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
-            
-      //         nodeEnter.append("text")
-      //           .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
-      //           .attr("dy", ".35em")
-      //           .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-      //           .text(function(d) { return d.name; })
-      //           .style("fill-opacity", 1e-6);
-            
-      //         // Transition nodes to their new position.
-      //         var nodeUpdate = node.transition()
-      //           .duration(duration)
-      //           .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-            
-      //         nodeUpdate.select("circle")
-      //           .attr("r", 10)
-      //           .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
-            
-      //         nodeUpdate.select("text")
-      //           .style("fill-opacity", 1);
-            
-      //         // Transition exiting nodes to the parent's new position.
-      //         var nodeExit = node.exit().transition()
-      //           .duration(duration)
-      //           .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-      //           .remove();
-            
-      //         nodeExit.select("circle")
-      //           .attr("r", 1e-6);
-            
-      //         nodeExit.select("text")
-      //           .style("fill-opacity", 1e-6);
-            
-      //         // Update the links…
-      //         var link = svg.selectAll("path.link")
-      //           .data(links, function(d) { return d.target.id; });
-            
-      //         // Enter any new links at the parent's previous position.
-      //         link.enter().insert("path", "g")
-      //           .attr("class", "link")
-      //           .attr("d", function(d) {
-      //           var o = {x: source.x0, y: source.y0};
-      //           return diagonal({source: o, target: o});
-      //           });
-            
-      //         // Transition links to their new position.
-      //         link.transition()
-      //           .duration(duration)
-      //           .attr("d", diagonal);
-            
-      //         // Transition exiting nodes to the parent's new position.
-      //         link.exit().transition()
-      //           .duration(duration)
-      //           .attr("d", function(d) {
-      //           var o = {x: source.x, y: source.y};
-      //           return diagonal({source: o, target: o});
-      //           })
-      //           .remove();
-            
-      //         // Stash the old positions for transition.
-      //         nodes.forEach(function(d) {
-      //         d.x0 = d.x;
-      //         d.y0 = d.y;
-      //         });
-      //       }
-            
-      //       // Toggle children on click.
-      //       function click(d) {
-      //           console.log('D bb ===>', d)
-      //         if (d.children) {
-      //         d._children = d.children;
-      //         d.children = null;
-      //         } else {
-      //         d.children = d._children;
-      //         d._children = null;
-      //         }
-      //         update(d);
-      //       }
-            
-      //       window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});
-      //           </script>
-      //         </body>
-      //       </html>`
-      //   );
-      //   stream.end();
-      // });
+      if (req.headers.xtressfina) {
+        axios.post('http://localhost:4050/finished', Extress.tree);
+        console.log('Final request processed, sending post to Xtress server to rerender tree');
+      }
     })
 
     next();
   }, 
 }
 
+eapp.post('/finished', (req, res) => {
+  io.emit( 'data', req.body )
+})
 
 module.exports = Extress;

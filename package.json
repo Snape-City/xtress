@@ -7,7 +7,8 @@
     "extress": "./test.js"
   },
   "scripts": {
-    "start-demo-server": "nodemon demo/server/demo-server.js",
+    "start-demo-server": "node gui/server/demo-server.js",
+    "start-extress-server": "node -e 'require(\"./extress\").proxy()'",
     "test": "echo test"
   },
   "repository": {
@@ -26,6 +27,7 @@
     "nodemon": "^1.18.4"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "opn": "^5.4.0",
     "socket.io": "^2.1.1"
