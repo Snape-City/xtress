@@ -1,6 +1,16 @@
 
-.App {
+body {
   margin: 1rem;
+ 
   font-family: Arial, Helvetica, sans-serif;
+  background-color: aqua;
 }
+#root{
+  height: 200%;
+
+}
+.display{
+  text-align: center;
+}
+
 

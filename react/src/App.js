@@ -1,20 +1,19 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import Tree from "react-d3-tree";
-//const D3Tree = require('./D3Tree');
-//import Tree from 'react-tree-graph';
 import "./App.css";
+import DashboardContainer from './DashboardContainer';
+import Header from "./Header";
+import Team from './Team';
 
 
 const containerStyles = {
-  width: '100%',
-  height: '100vh',
+  width: '95%',
+  height: '95%',
 }
-
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       data: [{
         "name": "/",
@@ -26,58 +25,49 @@ class App extends Component {
             "name": "/demo/example/2",
             "children": [],
             "methods": {
-              "post": {
-                "performance": []
-              },
-              "put": {
-                "performance": []
-              },
-              "delete": {
-                "performance": []
-              }
             }
           }, {
             "name": "/demo/example/randomMiddleware",
             "children": [],
             "methods": {
               "post": {
-                "performance": []
+                "performance": [4]
               },
               "put": {
-                "performance": []
+                "performance": [5]
               },
               "delete": {
-                "performance": []
+                "performance": [6]
               }
             }
           }],
           "methods": {
             "post": {
-              "performance": []
+              "performance": [7]
             },
             "put": {
-              "performance": []
+              "performance": [8]
             },
             "delete": {
-              "performance": []
+              "performance": [9]
             },
             "get": {
-              "performance": []
+              "performance": [10]
             }
           }
         }],
         "methods": {
           "post": {
-            "performance": []
+            "performance": [11]
           },
           "put": {
-            "performance": []
+            "performance": [12]
           },
           "delete": {
-            "performance": []
+            "performance": [13]
           },
           "get": {
-            "performance": ["7885.073195010424ms"]
+            "performance": [14]
           }
         }
       }, {
@@ -89,43 +79,43 @@ class App extends Component {
             "children": [],
             "methods": {
               "post": {
-                "performance": []
+                "performance": [15]
               },
               "put": {
-                "performance": []
+                "performance": [16]
               },
               "delete": {
-                "performance": []
+                "performance": [17]
               }
             }
           }],
           "methods": {
             "post": {
-              "performance": []
+              "performance": [18]
             },
             "put": {
-              "performance": []
+              "performance": [19]
             },
             "delete": {
-              "performance": []
+              "performance": [20]
             },
             "get": {
-              "performance": []
+              "performance": [21]
             }
           }
         }],
         "methods": {
           "post": {
-            "performance": []
+            "performance": [22]
           },
           "put": {
-            "performance": []
+            "performance": [23]
           },
           "delete": {
-            "performance": []
+            "performance": [24]
           },
           "get": {
-            "performance": []
+            "performance": [25]
           }
         }
       }, {
@@ -133,13 +123,13 @@ class App extends Component {
         "children": [],
         "methods": {
           "post": {
-            "performance": []
+            "performance": [26]
           },
           "put": {
-            "performance": []
+            "performance": [27]
           },
           "delete": {
-            "performance": []
+            "performance": [28]
           }
         }
       }, {
@@ -147,13 +137,13 @@ class App extends Component {
         "children": [],
         "methods": {
           "post": {
-            "performance": []
+            "performance": [29]
           },
           "put": {
-            "performance": []
+            "performance": [30]
           },
           "delete": {
-            "performance": []
+            "performance": [31]
           }
         }
       }, {
@@ -167,64 +157,64 @@ class App extends Component {
               "children": [],
               "methods": {
                 "post": {
-                  "performance": []
+                  "performance": [32]
                 },
                 "put": {
-                  "performance": []
+                  "performance": [33]
                 },
                 "delete": {
-                  "performance": []
+                  "performance": [34]
                 }
               }
             }],
             "methods": {
               "post": {
-                "performance": []
+                "performance": [35]
               },
               "put": {
-                "performance": []
+                "performance": [36]
               },
               "delete": {
-                "performance": []
+                "performance": [37]
               }
             }
           }],
           "methods": {
             "post": {
-              "performance": []
+              "performance": [38]
             },
             "put": {
-              "performance": []
+              "performance": [39]
             },
             "delete": {
-              "performance": []
+              "performance": [40]
             }
           }
         }],
         "methods": {
           "post": {
-            "performance": []
+            "performance": [41]
           },
           "put": {
-            "performance": []
+            "performance": [42]
           },
           "delete": {
-            "performance": []
+            "performance": [43]
           }
         }
       }],
       "methods": {
         "get": {
-          "performance": []
+          "performance": [44]
         },
         "post": {
-          "performance": []
+          "performance": [45]
         },
         "put": {
-          "performance": []
+          "performance": [46]
         },
         "delete": {
-          "performance": []
+          "performance": [47]
         }
       }}],
       stats : {
@@ -233,32 +223,59 @@ class App extends Component {
 
       }
     };
-
     // Binding methods for tree manipulation
     this.onClick = this.onClick.bind(this)
-
   };
-
-  onClick() {
-    alert("YO")
+  //click events for each node performance
+  onClick(e) {
+    let id = 0;
+    function createData(name, methods, performance, perfor, protein) {
+      id += 1;
+      let performanceData = []
+      Object.keys(performance).forEach(key => {
+        performanceData.push(performance[key].performance[0])
+      })
+      let performanceAvg = performanceData.reduce(
+        (acc,next)=>{return acc+next},0) / performanceData.length
+      return { 
+        id, 
+        name, 
+        methods, 
+        performance: performanceData.toString(), 
+        perfor: performanceAvg, protein 
+      };
+    }
+    //This is coping the data from 
+    if(this.state.rows) {
+      const rows = this.state.rows.slice();
+      rows.push(createData(e.name, e.methods, e.methods, e.methods, 2 ))
+      this.setState({rows});
+    } else {
+      const rows = [
+        createData(e.name, e.methods, e.methods, e.methods, 4.0)
+      ];
+        this.setState({rows})
+    }
   }
-
   componentDidMount() {
     const dimensions = this.treeContainer.getBoundingClientRect();
     this.setState({
       translate: {
-        x: dimensions.width / 2,
+        x: dimensions.width / 4,
         y: dimensions.height / 2
       }
     })
   }
-
+//<div style={{  display: 'flex', 'flex-drection':'row'}}> <Team /> <Team /> <Team /> <Team /> </div>
   render() {
     return (
-      /* <Tree /> will fill width/height of its container; in this case `#treeWrapper` */
-      <div id="treeWrapper" style={containerStyles} ref={tc => (this.treeContainer = tc)}>
-        <Tree data={this.state.data} translate={this.state.translate} orientation={'vertical'} onClick={this.onClick} initialDepth={1} />
-      </div>
+      <div>
+            <Header />
+            <div id="treeWrapper" style={{width: '80em', height: '40em'}} ref={tc => (this.treeContainer = tc)}>
+            <Tree data={this.state.data} translate={this.state.translate} onClick={this.onClick} initialDepth={1} />
+          </div> 
+          <DashboardContainer onClick={this.onClick} rows={this.state.rows}/>  
+     </div>
     );
   }
 }
