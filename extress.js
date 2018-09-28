@@ -12,7 +12,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 
 eapp.use(bodyParser.json());
-eapp.use(express.static(path.join(__dirname, '/gui/build')));
+eapp.use(express.static(path.join(__dirname, '/dist/')));
 
 
 const Extress = {

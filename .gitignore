@@ -1,5 +1,4 @@
 node_modules/
-gui/node_modules/
 package-lock.json
-gui/package-lock.json
-gui/build/bundle.js
+package-lock.json
+dist/bundle.js
