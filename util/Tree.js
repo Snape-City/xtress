@@ -79,11 +79,7 @@ Tree.prototype.add = function(endpoint) {
 };
 
 Tree.prototype.addPerformance = (performanceNode, reqMethod, performance) => {
-  if (!performanceNode.methods[reqMethod]) {
-    performanceNode.methods[reqMethod] = {
-      performance: [performance]
-    };
-  } else performanceNode.methods[reqMethod].performance.push(performance + 'ms');
+  performanceNode.methods[reqMethod].performance.push(parseInt(performance));
 };
 
 Tree.prototype.remove = function(path) {

@@ -1,0 +1,30 @@
+
+body {
+  margin: 0px;
+}
+
+#treeWrapper {
+  font-family: Arial, Helvetica, sans-serif;
+  /* background-color: RGB(17,23,23); */
+  background-color: lightcoral
+}
+
+#top-level-container {
+  margin: 0px;
+  font: white;
+
+
+  font-family: Helvetica;
+  font-size: 80%
+}
+
+#dashboard-wrapper {
+  display: flex;
+  margin: 20px;
+}
+
+#dashbox {
+  margin: 2px;
+  border: 2px solid black;
+
+}

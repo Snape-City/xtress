@@ -1,98 +1,4 @@
-<<<<<<< HEAD
-// const { EventEmitter } = require('events');
-// const profiles = new EventEmitter();
-=======
-const { EventEmitter } = require('events');
->>>>>>> eafb03b4f8538f6601d991862ca8cec3dbc9a5d4
-const { performance } = require('perf_hooks');
-const { Tree } = require('./util/Tree');
-const fs = require('fs');
-const express = require('express');
-const opn = require('opn');
-const eapp = express();
-const path = require('path');
-const http = require('http').Server(eapp);
-const io = require('socket.io')(http);
-const axios = require('axios');
-const bodyParser = require('body-parser');
-
-eapp.use(bodyParser.json());
-eapp.use(express.static(path.join(__dirname, '/dist/')));
-
-const Extress = {
-  tree: new Tree(),
-  map: app => {
-    function buildTree(stack) {
-      stack.forEach(endpoint => (endpoint.route ? Extress.tree.add(endpoint.route) : null));
-    }
-
-    buildTree(app._router.stack);
-    axios.post('http://localhost:4050/finished', Extress.tree);
-
-  },
-  proxy: () => {
-    http.listen(4050, console.log(`listening on port 4050`));
-    opn(`http://localhost:4050/`)
-    io.on('connection', (socket) => {
-      console.log('a user connected');
-
-      socket.on('disconnect', () => {
-        console.log('user disconnected');
-      });
-
-      socket.on('config', (config) => {
-        const promPush = (promArr, request, index) => {
-          if (request.method === 'GET') {
-            if (index === request.requestNum - 1) {
-              promArr.push(axios.get(request.route, { headers: { XtressFina: true, }}));
-            } else {
-              promArr.push(axios.get(request.route));
-            }
-          } else if (request.method === 'POST') {
-            promArr.push(axios.post(request.route));
-          } else if (request.method === 'PUT') {
-            // TODO
-          } else if (request.method === 'DELETE') {
-            // TODO
-          } else if (request.method === 'PATCH') {
-            // TODO
-          } else {
-            return 'Invalid HTTP method!';
-          }
-        };
-
-        const promiseArr = [];
-        config.config.forEach(request => {
-          for (let i = 0; i < request.requestNum; i++) {
-            promPush(promiseArr, request, i);
-          }
-        });
-        axios.all(promiseArr).then(console.log('all requests have been processed!'));
-
-      })
-
-    setTimeout(() => {
-      socket.emit('data', {
-        data: Extress.tree
-      }), 5000
-    })
-  })
- },
-  routeTimer: (req, res, next) => {
-    const start = performance.now();
-
-    res.once('finish', () => {
-      const performanceNode = Extress.tree.findBFS(req.originalUrl);
-      Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
-<<<<<<< HEAD
-    });
-    next();
-  },
-  generateReport: () => {
-    var stream = fs.createWriteStream('index.html');
-    stream.once('open', () => {
-      stream.write(
-        `<!DOCTYPE html>
+<!DOCTYPE html>
             <html lang="en">
               <head>
                 <meta charset="utf-8">
@@ -132,7 +38,7 @@ const Extress = {
               
             <script>
             
-            const Tree = [${JSON.stringify(Extress.tree)}]
+            const Tree = [{"root":{"name":"/","children":[{"name":"/demo","children":[{"name":"/demo/example","children":[{"name":"/demo/example/2","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/demo/example/randomMiddleware","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{}}],"methods":{"get":{"performance":["2484.0444509983063ms","2470.026012003422ms","2471.3623099923134ms"]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/test","children":[{"name":"/test/example","children":[{"name":"/test/example/randomMiddleware","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/users","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/api","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}},{"name":"/heavily","children":[{"name":"/heavily/nested","children":[{"name":"/heavily/nested/trash","children":[{"name":"/heavily/nested/trash/routes","children":[],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}],"methods":{}}],"methods":{}}],"methods":{}}],"methods":{"get":{"performance":[]},"post":{"performance":[]},"put":{"performance":[]},"delete":{"performance":[]}}}}]
             
             // ************** Generate the tree diagram	 *****************
             var margin = {top: 20, right: 120, bottom: 20, left: 120},
@@ -266,28 +172,4 @@ const Extress = {
             window.addEventListener("DOMContentLoaded", function(){console.log(Tree)});
                 </script>
               </body>
-            </html>`
-      );
-      stream.end();
-    });
-  }
-};
-
-module.exports = Extress;
-=======
-      if (req.headers.xtressfina) {
-        axios.post('http://localhost:4050/finished', Extress.tree);
-        console.log('Final request processed, sending post to Xtress server to rerender tree');
-      }
-    })
-
-    next();
-  }, 
-}
-
-eapp.post('/finished', (req, res) => {
-  io.emit( 'data', req.body )
-})
-
-module.exports = Extress;
->>>>>>> eafb03b4f8538f6601d991862ca8cec3dbc9a5d4
+            </html>
