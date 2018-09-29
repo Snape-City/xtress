@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import Tree from "react-d3-tree";
-import treeData from "../../../public/treeData.json" //make this more generalized....
+// import treeData from "../../../public/treeData.json" //make this more generalized....
 import "./Tree.css";
 
 

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { hot } from "react-hot-loader";
 import DashboardContainer from "./components/containers/DashboardContainer.js";
-import TreeContainer from "./components/containers/TreeContainer.js";
+// import TreeContainer from "./components/containers/TreeContainer.js";
+import SendIt from './components/SendIt.jsx';
+import Sock from './components/socket.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -13,8 +15,11 @@ class App extends Component {
   render() {
     return (
       <div>
+        <div>
+          <SendIt/>
+          <Sock/>
+        </div>
         <div id="top-level-container">
-          <TreeContainer />
         </div>
         <div>
           <DashboardContainer />
