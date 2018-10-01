@@ -1,5 +1,5 @@
 const { performance } = require('perf_hooks');
-const { Tree } = require('./lib/Tree');
+const { Tree } = require('./lib/tree');
 const axios = require('axios');
 
 const Extress = {
