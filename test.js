@@ -33,5 +33,12 @@ config.requests.forEach(request => {
     promPush(promiseArr, request, i);
   }
 });
-axios.all(promiseArr).then(console.log('all requests have been processed!'));
-
+axios
+  .all(promiseArr)
+  .then(response => {
+    console.log('PROMISE ALL RESPONSE ===>', response);
+    axios.get('http://localhost:3333/extress');
+  })
+  .catch(error => {
+    console.error('Error resolving promises ===>', error);
+  });
