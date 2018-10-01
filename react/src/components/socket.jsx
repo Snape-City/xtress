@@ -1,37 +1,29 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-class Sock extends Component {
+export default class Socket extends Component {
   constructor(props) {
     super(props);
-    this.state = {tree: null}
+    this.state = { tree: null };
   }
-  
+
   componentDidMount() {
     setTimeout(() => {
       socket.emit('data', {
         data: 'socket from client'
-      })
+      });
     }, 5000);
 
     socket.on('data', data => {
-      this.setState(state => {
-        return {tree: JSON.stringify(data)}
-      })
-    })
+      this.setState({ tree: JSON.stringify(data) });
+    });
   }
 
   render() {
     return (
       <div>
-        here
+        <p>TREE BELOW</p>
         <p>{this.state.tree}</p>
       </div>
-    )
+    );
   }
-} 
-
-
-
-
-
-export default Sock;
+}

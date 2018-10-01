@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 class SendIt extends Component {
   constructor(props) {
@@ -6,12 +6,12 @@ class SendIt extends Component {
     this.state = {
       config: [
         {
-          "method": "GET",
-          "route": "http://localhost:3333/",
-          "requestNum": 100
+          method: 'GET',
+          route: 'http://localhost:3333/',
+          requestNum: 100
         }
       ]
-    }
+    };
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -20,22 +20,16 @@ class SendIt extends Component {
     e.preventDefault();
     socket.emit('config', {
       config: this.state.config
-    })
+    });
   }
 
   render() {
     return (
       <div>
-        <button onClick={this.handleClick}>
-          Send It
-        </button>
+        <button onClick={this.handleClick}>Send It!</button>
       </div>
-    )
+    );
   }
-} 
+}
 
-
-
-
-
-export default SendIt
+export default SendIt;
