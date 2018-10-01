@@ -9,7 +9,7 @@
     "demo-server": "nodemon test/server/demo-server.js",
     "server": "nodemon lib/proxy_server.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "extress": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
