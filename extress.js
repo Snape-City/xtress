@@ -10,7 +10,7 @@ const Extress = {
     }
 
     buildTree(app._router.stack);
-    axios.post('http://localhost:4050/finished', Extress.tree);
+    // axios.post('http://localhost:4050/finished', Extress.tree);
   },
   routeTimer: (req, res, next) => {
     const start = performance.now();
