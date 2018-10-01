@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
-app.extress = require('../../extress');
+extress = require('../../extress');
 
 const dummyController1 = require('./controllers/dummyController1');
 const dummyController2 = require('./controllers/dummyController2');
@@ -10,7 +10,7 @@ const dummyController3 = require('./controllers/dummyController3');
 const dummyController4 = require('./controllers/dummyController4');
 const PORT = 3333;
 
-app.use(app.extress.routeTimer);
+app.use(extress.routeTimer);
 app.use(cors());
 
 app.get('/', dummyController1.mw1, dummyController1.mw2, dummyController1.mw3, dummyController1.mwLast);
@@ -203,4 +203,7 @@ app.post('/heavily/nested/trash/routes', dummyController2.mw1, dummyController1.
 app.put('/heavily/nested/trash/routes', dummyController3.mw1, dummyController1.mwLast);
 app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
-app.listen(PORT, app.extress.map(app), console.log(`Listening on ${PORT}`));
+app.listen(PORT, () => {
+  extress.map(app);
+  console.log(`Listening on ${PORT}`);
+});
