@@ -8,7 +8,7 @@ class SendIt extends Component {
         {
           method: 'GET',
           route: 'http://localhost:3333/',
-          requestNum: 100
+          requestNum: 10
         }
       ]
     };

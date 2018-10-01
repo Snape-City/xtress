@@ -7,11 +7,11 @@ export default class Socket extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      socket.emit('data', {
-        data: 'socket from client'
-      });
-    }, 5000);
+    // setTimeout(() => {
+    //   socket.emit('data', {
+    //     data: 'socket from client'
+    //   });
+    // }, 5000);
 
     socket.on('data', data => {
       this.setState({ tree: JSON.stringify(data) });
