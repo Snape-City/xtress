@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
+const TreeContainer = require('./components/containers/TreeContainer.js') 
 
 export default class Socket extends Component {
   constructor(props) {
     super(props);
-    this.state = { tree: null };
+    this.state = { 
+      perfData: [],
+      treedata: null
+     };
   }
+
+  // handleClick(e){
+  //   axios.post('http://localhost:4050/tree', Extress.tree);
+  // }
+  
 
   componentDidMount() {
     // setTimeout(() => {
@@ -13,16 +22,25 @@ export default class Socket extends Component {
     //   });
     // }, 5000);
 
+    // TODO: move perfData to App.js and move "run" function to App.js, trigger here.
     socket.on('data', data => {
-      this.setState({ tree: JSON.stringify(data) });
+      let newArr = this.state.perfData;
+      newArr.push(JSON.stringify(data));
+      this.setState({ perfData: newArr });
     });
+
+    socket.on('tree', tree => {
+      console.log('TREE 8===>', tree)
+    })
   }
 
   render() {
     return (
       <div>
         <p>TREE BELOW</p>
-        <p>{this.state.tree}</p>
+        <p>{this.state.perfData}</p>
+        <button onClick={this.handleClick} >BUILD THAT TREE BOY </button>
+        <TreeContainer treeData={this.state.treeData} />
       </div>
     );
   }
