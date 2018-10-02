@@ -34,7 +34,7 @@ export default class Dashboard extends Component {
   hideModal = () => this.setState({ modalShown: false });
 
   addTest(config) {
-    console.log('config ==>', config);
+    // console.log('config ==>', config);
     this.setState(prevState => {
       return prevState.tests.push(config);
     });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-const TreeContainer = require('./components/containers/TreeContainer.js') 
+// const TreeContainer = require('./components/containers/TreeContainer.js') 
 
 export default class Socket extends Component {
   constructor(props) {
@@ -40,8 +40,9 @@ export default class Socket extends Component {
         <p>TREE BELOW</p>
         <p>{this.state.perfData}</p>
         <button onClick={this.handleClick} >BUILD THAT TREE BOY </button>
-        <TreeContainer treeData={this.state.treeData} />
       </div>
     );
   }
 }
+
+{/* <TreeContainer treeData={this.state.treeData} /> */}

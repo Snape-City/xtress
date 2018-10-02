@@ -54,15 +54,15 @@ export default class TestForm extends Component {
           </label>
           <br />
           <label>
-            Headers:
+            Header:
             <input type="text" name="headerKey" placeholder="key" onChange={this.handleChange} />
             <input type="text" name="headerValue" placeholder="value" onChange={this.handleChange} />
           </label>
           <br />
           <label>
-            Cookies:
-            <input type="text" name="cookieKey" placeholder="key" onChange={this.handleChange} />
-            <input type="text" name="cookieValue" placeholder="value" onChange={this.handleChange} />
+            Body:
+            <input type="text" name="bodyKey" placeholder="key" onChange={this.handleChange} />
+            <input type="text" name="bodyValue" placeholder="value" onChange={this.handleChange} />
           </label>
           <br />
           <input type="submit" value="Add Test" />

@@ -24,7 +24,7 @@ const Extress = {
     }
 
     buildTree(app._router.stack);
-    axios.post('http://localhost:4050/tree', Extress.tree);
+    axios.post('http://localhost:4050/tree', Extress.tree); //put this onto client side
   },
   durationArr: [],
 
@@ -33,14 +33,13 @@ const Extress = {
     route: null,
     min: null,
     max: null,
-    avg: null
+    avg: null,
+    routeDuration: null
   },
   
   routeTimer: (req, res, next) => {
     const start = performance.now();
 
-    
-    
     res.once('finish', () => {
       //const performanceNode = Extress.tree.findBFS(req.originalUrl);
      // Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
