@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "![travis](https://travis-ci.com/Snape-City/extress.svg?branch=master)",
   "main": "extress.js",
-  "bin": {
-    "extress": "./test.js"
-  },
   "scripts": {
-    "start-demo-server": "nodemon test/demo-server.js",
-    "test": "echo test"
+    "test": "echo test",
+    "build": "webpack -d --watch --display-error-details",
+    "demo-server": "nodemon test/server/demo-server.js",
+    "server": "nodemon lib/proxy_server.js",
+    "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
+    "extress": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -22,8 +23,33 @@
   "homepage": "https://github.com/Snape-City/extress#readme",
   "devDependencies": {
     "axios": "^0.18.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "concurrently": "^4.0.1",
+    "css-loader": "^1.0.0",
     "express": "^4.16.3",
-    "nodemon": "^1.18.4"
+    "html-webpack-plugin": "^3.2.0",
+    "nodemon": "^1.18.4",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.0",
+    "webpack": "^4.20.1",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.8"
   },
-  "dependencies": {}
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "opn": "^5.4.0",
+    "path": "^0.12.7",
+    "react": "^16.5.2",
+    "react-d3-tree": "^1.11.0",
+    "react-dom": "^16.5.2",
+    "react-hot-loader": "^4.3.11",
+    "socket.io": "^2.1.1"
+  }
 }
