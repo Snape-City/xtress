@@ -1,90 +1,82 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
 const CustomTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    color: theme.palette.common.white
   },
   body: {
-    fontSize: 14,
-  },
+    fontSize: 14
+  }
 }))(TableCell);
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
+    overflowX: "auto"
   },
   table: {
-    minWidth: 700,
+    minWidth: 700
   },
   row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.background.default
+    }
+  }
 });
+// <CustomTableCell component="th" scope="row" numeric>
+//   {key}
+// </CustomTableCell>
+// <CustomTableCell component="th" scope="row" numeric>
+//   {rows.methods[key].performance}
+// </CustomTableCell>
+// <CustomTableCell component="th" scope="row" numeric>
+//   {rows.perfor}
+// </CustomTableCell>
+// <CustomTableCell component="th" scope="row" numeric>
+//   {rows.perfor}
+// </CustomTableCell>
 
 class DashboardContainer extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
-  
-  // <CustomTableCell component="th" scope="row">{row.name}</CustomTableCell>
-  // <CustomTableCell numeric>
-  // {(Object.keys(row.methods).toString()
-  // )}</CustomTableCell>
-  // <CustomTableCell numeric>{row.performance}</CustomTableCell>
-  // <CustomTableCell numeric>{row.perfor}</CustomTableCell>
-  // <CustomTableCell numeric>{row.protein}</CustomTableCell>
-
-
-
 
   render() {
-    const { classes, rows } = this.props; 
-    //console.log(this.props)
+    const { classes, rows } = this.props;
     let rowData = null;
-    let rowArray ;
+    let rowArray;
     let displayRow = [];
-     console.log("displayRow",displayRow)
-     
+    console.log("2.page", rows);
     if (rows) {
-      rowArray = Object.keys(rows[0].methods)
-      // rowData = rows.map(row => {
-      //   rowArray = Object.keys(row.methods)
-      //   console.log("rowArray ",rowArray)
-      // })
-      for(let key in rows[0].methods) {
-        displayRow.push(
-          <TableRow>
-          <CustomTableCell component="th" scope="row">{rows[0].name}</CustomTableCell>
-          <CustomTableCell component="th" scope="row">{key}</CustomTableCell>
-          <CustomTableCell component="th" scope="row">{rows[0].methods[key].performance}</CustomTableCell>
-          <CustomTableCell id='display' component="th" scope="row">{rows[0].methods[key].performance}</CustomTableCell>
-        </TableRow>)
-      }
-        // return (
-        //   <TableRow className={classes.row} key={row.id}>
-        //     <CustomTableCell>{row.name}</CustomTableCell>
-        //   </TableRow>
-        // );
-      
-      // for(let i =0; i < rowArray.length; i++) {
-      //   console.log("i",rowArray[i])
-      //  displayRow.push(<CustomTableCell>{rowData[i]}</CustomTableCell>)
-      // }
-      // console.log("2",displayRow)
-      
+      displayRow.push(
+        <TableRow>
+          <CustomTableCell component="th" scope="row" numeric>
+            {rows[0].route}
+          </CustomTableCell>
+          <CustomTableCell component="th" scope="row" numeric>
+            {rows[0].method}
+          </CustomTableCell>
+          <CustomTableCell component="th" scope="row" numeric>
+            {rows[0].min}
+          </CustomTableCell>
+          <CustomTableCell component="th" scope="row" numeric>
+            {rows[0].max}
+          </CustomTableCell>
+          <CustomTableCell component="th" scope="row" numeric>
+            {rows[0].avg}
+          </CustomTableCell>
+        </TableRow>
+      );
     }
     return (
       <Paper className={classes.root}>
@@ -93,22 +85,20 @@ class DashboardContainer extends Component {
             <TableRow>
               <CustomTableCell>Route Name</CustomTableCell>
               <CustomTableCell numeric>Methods</CustomTableCell>
-              <CustomTableCell numeric>Performance (ms)</CustomTableCell>
+              <CustomTableCell numeric>Min (ms)</CustomTableCell>
+              <CustomTableCell numeric>Max (ms)</CustomTableCell>
               <CustomTableCell numeric>Performance Avg (ms)</CustomTableCell>
-              <CustomTableCell numeric>Some Other Data</CustomTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {displayRow}
-          </TableBody>
+          <TableBody>{displayRow}</TableBody>
         </Table>
       </Paper>
     );
   }
 }
-  
+
 DashboardContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(DashboardContainer);
