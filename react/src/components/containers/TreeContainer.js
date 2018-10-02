@@ -19,7 +19,6 @@ class TreeContainer extends Component {
       translate: undefined
     };
 
-
     // Binding methods for tree manipulation
     this.onClick = this.onClick.bind(this)
 
