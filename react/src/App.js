@@ -28,17 +28,15 @@ class App extends Component {
   //click events for each node performance
 
   onClick(e) {
-    console.log('perData', this.state.perfData)
+    // console.log('perData', this.state.perfData)
     const myDisplay = this.state.perfData.filter(value => {
-      console.log('value', value)
+      // console.log('value', value)
       return e.name == value.route;
     });
-    console.log(e.name)
-    // console.log("myDisplaysss", myDisplay);
-    //This is coping the data from
+    // console.log(e.name)
 
     if (myDisplay.length > 0) {
-      console.log('row', rows)
+      // console.log('row', rows)
       rows = myDisplay.slice();
       let method = rows[0].method;
       this.setState({ rows });
@@ -46,7 +44,7 @@ class App extends Component {
   }
   componentDidMount() {
     socket.on('tree', tree => {
-      console.log('trees', tree)
+      console.log('socket => trees', tree)
       this.setState({ treeData: [tree.root] })
     })
     if (this.state.treeData) {
@@ -61,13 +59,13 @@ class App extends Component {
           nonSiblings: .5
         }
       })
-      socket.on('data', data => {
-        let newArr = this.state.perfData;
-        newArr.push(JSON.stringify(data));
-        console.log('testData', newArr)
-        this.setState({ perfData: newArr });
-      });
     }
+    socket.on('data', data => {
+      let newArr = this.state.perfData;
+      newArr.push(JSON.stringify(data));
+      console.log('socket => perf data', data)
+      this.setState({ perfData: newArr });
+    });
   }
 
   render() {
