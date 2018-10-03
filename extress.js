@@ -15,14 +15,27 @@ const Extress = {
     axios.post('http://localhost:4050/tree', Extress.tree); //put this onto client side
   },
   durationArr: [],
-
+  startTime: null,
   perfData: {
+    routeDuration: null,
     method: null,
     route: null,
     min: null,
     max: null,
-    avg: null,
-    routeDuration: null
+    avg: null
+  },
+
+  reset: () => {
+    Extress.durationArr = [];
+    Extress.perfData = {
+      routeDuration: null,
+      method: null,
+      route: null,
+      min: null,
+      max: null,
+      avg: null
+    };
+    Extress.startTime = null;
   },
 
   routeTimer: (req, res, next) => {
@@ -31,7 +44,7 @@ const Extress = {
     res.once('finish', () => {
       //const performanceNode = Extress.tree.findBFS(req.originalUrl);
       // Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
-      console.log('Finished...');
+      console.log('Inside res.once(finish...). Headers ===>', req.headers);
       let duration = performance.now() - start;
       Extress.durationArr.push(duration);
 
@@ -43,9 +56,11 @@ const Extress = {
       Extress.perfData.method = req.method;
       Extress.perfData.route = req.originalUrl;
 
-      if (req.headers.xtressfina) {
-        console.log('req Headers...');
-        Extress.perfData.routeDuration = performance.now() - parseInt(req.headers.xtressstart);
+      if (req.headers.xtressstart) Extress.startTime = req.headers.xtressstart * 1;
+
+      if (req.headers.xtressend) {
+        const endTime = req.headers.xtressend * 1;
+        Extress.perfData.routeDuration = endTime - Extress.startTime;
         axios
           .post('http://localhost:4050/finished', Extress.perfData) //Sends just performance object
           // .post('http://localhost:4050/finished', Extress.tree) //Sends entire tree
@@ -53,13 +68,7 @@ const Extress = {
             console.log('Final request processed, sending post to Xtress server to rerender tree');
 
             // Reset perfData before it performing another test...
-            Extress.perfData = {
-              method: null,
-              route: null,
-              min: null,
-              max: null,
-              avg: null
-            };
+            Extress.reset();
           })
           .catch(error => console.error(error));
       }
