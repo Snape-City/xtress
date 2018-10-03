@@ -33,18 +33,7 @@ const styles = theme => ({
     }
   }
 });
-// <CustomTableCell component="th" scope="row" numeric>
-//   {key}
-// </CustomTableCell>
-// <CustomTableCell component="th" scope="row" numeric>
-//   {rows.methods[key].performance}
-// </CustomTableCell>
-// <CustomTableCell component="th" scope="row" numeric>
-//   {rows.perfor}
-// </CustomTableCell>
-// <CustomTableCell component="th" scope="row" numeric>
-//   {rows.perfor}
-// </CustomTableCell>
+
 
 class DashboardContainer extends Component {
   constructor(props) {
@@ -56,8 +45,9 @@ class DashboardContainer extends Component {
     let rowData = null;
     let rowArray;
     let displayRow = [];
-    console.log("2.page", rows);
+
     if (rows) {
+      console.log("rowsss", rows)
       displayRow.push(
         <TableRow>
           <CustomTableCell component="th" scope="row" numeric>
@@ -97,8 +87,8 @@ class DashboardContainer extends Component {
   }
 }
 
-DashboardContainer.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+// DashboardContainer.propTypes = {
+//   classes: PropTypes.object.isRequired
+// };
 
 export default withStyles(styles)(DashboardContainer);
