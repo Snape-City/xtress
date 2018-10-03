@@ -14,7 +14,6 @@ export default class Socket extends Component {
   //   axios.post('http://localhost:4050/tree', Extress.tree);
   // }
   
-
   componentDidMount() {
     // setTimeout(() => {
     //   socket.emit('data', {
