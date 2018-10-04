@@ -42,7 +42,7 @@ class App extends Component {
       this.setState({ treeData: [tree.root] })
     })
     socket.on('data', data => {
-      this.setState((prevState) => {
+      this.setState(prevState => {
         prevState.perfData.push(data)
       })
     });
