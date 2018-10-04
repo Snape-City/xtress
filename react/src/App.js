@@ -49,6 +49,11 @@ class App extends Component {
       console.log('trees', tree)
       this.setState({ treeData: [tree.root] })
     })
+    socket.on('data', data => {
+      this.setState((prevState) => {
+        prevState.perfData.push(data)
+      })
+    });
     if (this.state.treeData) {
       const dimensions = this.treeContainer.getBoundingClientRect();
       this.setState({
@@ -61,12 +66,6 @@ class App extends Component {
           nonSiblings: .5
         }
       })
-      socket.on('data', data => {
-        let newArr = this.state.perfData;
-        newArr.push(JSON.stringify(data));
-        console.log('testData', newArr)
-        this.setState({ perfData: newArr });
-      });
     }
   }
 
