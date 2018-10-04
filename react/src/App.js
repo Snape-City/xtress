@@ -20,7 +20,6 @@ class App extends Component {
       perfData: [],
       treeData: null,
       rows: null
-
     };
     // Binding methods for tree manipulation
     this.onClick = this.onClick.bind(this);
@@ -33,15 +32,12 @@ class App extends Component {
       console.log('value', value)
       return e.name == value.route;
     });
-    console.log(e.name)
+    console.log("this is name for d3 click", e.name)
     // console.log("myDisplaysss", myDisplay);
     //This is coping the data from
 
-    if (myDisplay.length > 0) {
-      console.log('row', rows)
-      rows = myDisplay.slice();
-      let method = rows[0].method;
-      this.setState({ rows });
+    if (myDisplay.length) {
+      this.setState({ rows: myDisplay });
     }
   }
   componentDidMount() {
