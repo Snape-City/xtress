@@ -16,11 +16,10 @@ const Extress = {
   },
   durationObj: {},
   startTime: null,
-  perfData: [],
+
 
   reset: () => {
     Extress.durationObj = {};
-    Extress.perfData = [];
     Extress.startTime = null;
   },
 
@@ -53,10 +52,9 @@ const Extress = {
           avg,
 
         }
-        // Extress.perfData.push(testData)
+
         axios
-          .post('http://localhost:4050/finished', testData) //Sends just performance object
-          // .post('http://localhost:4050/finished', Extress.tree) //Sends entire tree
+          .post('http://localhost:4050/finished', testData)
           .then(() => {
             console.log('Final request processed, sending post to Xtress server to rerender tree');
 

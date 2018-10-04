@@ -59,37 +59,37 @@ class App extends Component {
         }
       })
     }
-  }
-
-  render() {
-    if (this.state.treeData) {
-      return (
-        <div>
-          <Dashboard />
-          <div id="treeWrapper"
-            style={{ width: "80em", height: "40em" }}
-            ref={tc => (this.treeContainer = tc)}
-          >
-            <Tree
-              data={this.state.treeData}
-              collapsible={false}
-              translate={this.state.translate}
-              onClick={this.onClick}
-              initialDepth={200}
-            />
-          </div>
-
-          <DashboardContainer rows={this.state.rows} />
-        </div>
-      );
-
     }
-    return (
-      <div>  <Dashboard /> </div>
-    )
+
+    render() {
+      if (this.state.treeData) {
+        return (
+          <div>
+            <Dashboard />
+            <div id="treeWrapper"
+              style={{ width: "80em", height: "40em" }}
+              ref={tc => (this.treeContainer = tc)}
+            >
+              <Tree
+                data={this.state.treeData}
+                collapsible={false}
+                translate={this.state.translate}
+                onClick={this.onClick}
+                initialDepth={200}
+              />
+            </div>
+
+            <DashboardContainer rows={this.state.rows} />
+          </div>
+        );
+
+      }
+      return (
+        <div>  <Dashboard /> </div>
+      )
+    }
+
+
   }
-
-
-}
-export default hot(module)(App);
+  export default hot(module)(App);
 
