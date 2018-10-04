@@ -14,27 +14,12 @@ const Extress = {
     buildTree(app._router.stack);
     axios.post('http://localhost:4050/tree', Extress.tree); //put this onto client side
   },
-  durationArr: [],
+  durationObj: {},
   startTime: null,
-  perfData: {
-    routeDuration: null,
-    method: null,
-    route: null,
-    min: null,
-    max: null,
-    avg: null
-  },
+
 
   reset: () => {
-    Extress.durationArr = [];
-    Extress.perfData = {
-      routeDuration: null,
-      method: null,
-      route: null,
-      min: null,
-      max: null,
-      avg: null
-    };
+    Extress.durationObj = {};
     Extress.startTime = null;
   },
 
@@ -44,26 +29,32 @@ const Extress = {
     res.once('finish', () => {
       //const performanceNode = Extress.tree.findBFS(req.originalUrl);
       // Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
+      const endTime = performance.now()
+      const testId = req.headers.testid
       console.log('Inside res.once(finish...). Headers ===>', req.headers);
       let duration = performance.now() - start;
-      Extress.durationArr.push(duration);
+      if (Extress.durationObj[testId]) {
+        Extress.durationObj[testId].push(duration)
+      } else {
+        Extress.durationObj[testId] = [duration]
+      }
 
-      const { min, max, avg } = util.calculatePerfData(Extress.durationArr);
 
-      Extress.perfData.min = min;
-      Extress.perfData.max = max;
-      Extress.perfData.avg = avg;
-      Extress.perfData.method = req.method;
-      Extress.perfData.route = req.originalUrl;
 
-      if (req.headers.xtressstart) Extress.startTime = req.headers.xtressstart * 1;
 
       if (req.headers.xtressend) {
-        const endTime = req.headers.xtressend * 1;
-        Extress.perfData.routeDuration = endTime - Extress.startTime;
+        const { min, max, avg } = util.calculatePerfData(Extress.durationObj[testId]);
+        const testData = {
+          method: req.method,
+          route: req.originalUrl,
+          min,
+          max,
+          avg,
+
+        }
+
         axios
-          .post('http://localhost:4050/finished', Extress.perfData) //Sends just performance object
-          // .post('http://localhost:4050/finished', Extress.tree) //Sends entire tree
+          .post('http://localhost:4050/finished', testData)
           .then(() => {
             console.log('Final request processed, sending post to Xtress server to rerender tree');
 
