@@ -65,6 +65,9 @@ class DashboardContainer extends Component {
           <CustomTableCell component="th" scope="row" numeric>
             {row.avg}
           </CustomTableCell>
+          <CustomTableCell component="th" scope="row" numeric>
+            {row.routeDuration}
+          </CustomTableCell>
         </TableRow>
       ))
     }
@@ -77,7 +80,8 @@ class DashboardContainer extends Component {
               <CustomTableCell numeric>Methods</CustomTableCell>
               <CustomTableCell numeric>Min (ms)</CustomTableCell>
               <CustomTableCell numeric>Max (ms)</CustomTableCell>
-              <CustomTableCell numeric>Performance Avg (ms)</CustomTableCell>
+              <CustomTableCell numeric>Average (ms)</CustomTableCell>
+              <CustomTableCell numeric>Test Duration (ms)</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>{displayRow}</TableBody>
