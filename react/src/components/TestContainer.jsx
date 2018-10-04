@@ -8,7 +8,7 @@ export default class TestContainer extends Component {
 
   render() {
     const testArr = this.props.tests.map((test, i) => {
-      console.log('test ===>', test);
+
       return <Test test={test} testId={i} key={i} />;
     });
     return <div>{testArr}</div>;
