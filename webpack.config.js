@@ -8,8 +8,8 @@ module.exports = {
   entry: './react/src/index.js',
   output: {
     path: path.join(__dirname, OUTPUT_DIR),
-    filename: 'bundle.js'
-    // publicPath: '/dist'
+    filename: 'bundle.js',
+    // publicPath: 'dist'
   },
   module: {
     rules: [
@@ -23,14 +23,6 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       }
     ]
-  },
-  // Configurations for webpack-dev-server
-  devServer: {
-    port: 8888, // webpack-dev-server port to listen on
-    open: true, // automatically open homepage on startup
-    proxy: {
-      '/': 'http://localhost:4050'
-    }
   },
   // clean-webpack-plugin removes build folder(s) before building
   // html-webpack-plugin simplifies creation of HTML files for your bundle

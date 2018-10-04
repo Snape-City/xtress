@@ -34,7 +34,8 @@ const Extress = {
     min: null,
     max: null,
     avg: null,
-    routeDuration: null
+    routeDuration: null,
+    arr: null
   },
   
   routeTimer: (req, res, next) => {
@@ -43,7 +44,6 @@ const Extress = {
     res.once('finish', () => {
       //const performanceNode = Extress.tree.findBFS(req.originalUrl);
      // Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
-      console.log('Finished...')
       let duration = performance.now() - start;
       Extress.durationArr.push(duration);
 
@@ -54,9 +54,10 @@ const Extress = {
       Extress.perfData.avg = avg
       Extress.perfData.method = req.method;
       Extress.perfData.route = req.originalUrl;
+      Extress.perfData.arr = Extress.durationArr.length;
+
 
       if (req.headers.xtressfina) {
-         console.log('req Headers...')
         Extress.perfData.routeDuration = performance.now() - parseInt(req.headers.xtressstart);
         axios
           .post('http://localhost:4050/finished', Extress.perfData) //Sends just performance object
@@ -70,7 +71,8 @@ const Extress = {
               route: null,
               min: null,
               max: null,
-              avg: null
+              avg: null,
+              arr: null,
             }
           })
           .catch(error => console.error(error));
