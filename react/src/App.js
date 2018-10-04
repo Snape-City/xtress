@@ -27,14 +27,10 @@ class App extends Component {
   //click events for each node performance
 
   onClick(e) {
-    console.log('perData', this.state.perfData)
+    this.setState({ rows: null })
     const myDisplay = this.state.perfData.filter(value => {
-      console.log('value', value)
       return e.name == value.route;
     });
-    console.log("this is name for d3 click", e.name)
-    // console.log("myDisplaysss", myDisplay);
-    //This is coping the data from
 
     if (myDisplay.length) {
       this.setState({ rows: myDisplay });

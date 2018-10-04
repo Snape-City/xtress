@@ -48,25 +48,25 @@ class DashboardContainer extends Component {
 
     if (rows) {
       console.log("rowsss", rows)
-      displayRow.push(
-        <TableRow>
+      displayRow = rows.map((row, i) => (
+        <TableRow key={i}>
           <CustomTableCell component="th" scope="row" numeric>
-            {rows[0].route}
+            {row.route}
           </CustomTableCell>
           <CustomTableCell component="th" scope="row" numeric>
-            {rows[0].method}
+            {row.method}
           </CustomTableCell>
           <CustomTableCell component="th" scope="row" numeric>
-            {rows[0].min}
+            {row.min}
           </CustomTableCell>
           <CustomTableCell component="th" scope="row" numeric>
-            {rows[0].max}
+            {row.max}
           </CustomTableCell>
           <CustomTableCell component="th" scope="row" numeric>
-            {rows[0].avg}
+            {row.avg}
           </CustomTableCell>
         </TableRow>
-      );
+      ))
     }
     return (
       <Paper className={classes.root}>
