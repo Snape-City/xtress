@@ -80,7 +80,7 @@ class App extends Component {
           >
             <Tree
               data={this.state.treeData}
-              collapsible={true}
+              collapsible={false}
               translate={this.state.translate}
               onClick={this.onClick}
               initialDepth={200}
