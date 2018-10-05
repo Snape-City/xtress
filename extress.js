@@ -32,7 +32,7 @@ const Extress = {
       const endTime = performance.now()
       const testId = req.headers.testid
       console.log('Inside res.once(finish...). Headers ===>', req.headers);
-      let duration = performance.now() - start;
+      let duration = endTime - start;
       if (Extress.durationObj[testId]) {
         Extress.durationObj[testId].push(duration)
       } else {
