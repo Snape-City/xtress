@@ -7,7 +7,7 @@ export default class Dashboard extends Component {
     super(props);
     this.state = {
       url: '',
-      modalShown: false,
+      isModalShown: false,
       tests: []
     };
 
@@ -30,8 +30,8 @@ export default class Dashboard extends Component {
     });
   }
 
-  showModal = () => this.setState({ modalShown: true });
-  hideModal = () => this.setState({ modalShown: false });
+  showModal = () => this.setState({ isModalShown: true });
+  hideModal = () => this.setState({ isModalShown: false });
 
   addTest(config) {
     // console.log('config ==>', config);
@@ -49,7 +49,7 @@ export default class Dashboard extends Component {
         </label>
         <br />
         <TestContainer tests={this.state.tests} />
-        <TestForm addTest={this.addTest} modalShown={this.state.modalShown} hideModal={this.hideModal} />
+        <TestForm addTest={this.addTest} isModalShown={this.state.isModalShown} hideModal={this.hideModal} />
         <button onClick={this.showModal}>Add Test</button>
         <br />
         <button onClick={this.handleSubmit}>Run</button>
