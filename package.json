@@ -7,7 +7,7 @@
     "test": "echo test",
     "build": "webpack -d --watch --display-error-details",
     "demo-server": "node test/server/demo-server.js",
-    "server": "nodemon lib/proxy_server.js",
+    "server": "nodemon lib/proxyServer.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "extress": "concurrently \"npm run server\" "
   },
