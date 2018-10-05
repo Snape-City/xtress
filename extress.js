@@ -14,9 +14,9 @@ const Extress = {
     buildTree(app._router.stack);
     axios.post('http://localhost:4050/tree', Extress.tree); //put this onto client side
   },
+
   durationObj: {},
   startTime: null,
-
 
   reset: () => {
     Extress.durationObj = {};
@@ -32,15 +32,12 @@ const Extress = {
       const endTime = performance.now()
       const testId = req.headers.testid
       console.log('Inside res.once(finish...). Headers ===>', req.headers);
-      let duration = performance.now() - start;
+      let duration = endTime - start;
       if (Extress.durationObj[testId]) {
         Extress.durationObj[testId].push(duration)
       } else {
         Extress.durationObj[testId] = [duration]
       }
-
-
-
 
       if (req.headers.xtressend) {
         const { min, max, avg } = util.calculatePerfData(Extress.durationObj[testId]);
@@ -59,6 +56,7 @@ const Extress = {
             console.log('Final request processed, sending post to Xtress server to rerender tree');
 
             // Reset perfData before it performing another test...
+
             Extress.reset();
           })
           .catch(error => console.error(error));

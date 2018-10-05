@@ -38,7 +38,7 @@ class App extends Component {
   }
   componentDidMount() {
     socket.on('tree', tree => {
-      console.log('trees', tree)
+      console.log('socket => trees', tree)
       this.setState({ treeData: [tree.root] })
     })
     socket.on('data', data => {
