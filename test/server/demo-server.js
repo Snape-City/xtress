@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-extress = require('../../extress');
+const extress = require('../../extress');
 const dummyController1 = require('./controllers/dummyController1');
 const dummyController2 = require('./controllers/dummyController2');
 const dummyController3 = require('./controllers/dummyController3');

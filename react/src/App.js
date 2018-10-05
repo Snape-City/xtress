@@ -20,7 +20,6 @@ class App extends Component {
       perfData: [],
       treeData: null,
       rows: null
-
     };
     // Binding methods for tree manipulation
     this.onClick = this.onClick.bind(this);
@@ -28,18 +27,13 @@ class App extends Component {
   //click events for each node performance
 
   onClick(e) {
-    // console.log('perData', this.state.perfData)
+    this.setState({ rows: null })
     const myDisplay = this.state.perfData.filter(value => {
-      // console.log('value', value)
       return e.name == value.route;
     });
-    // console.log(e.name)
 
-    if (myDisplay.length > 0) {
-      // console.log('row', rows)
-      rows = myDisplay.slice();
-      let method = rows[0].method;
-      this.setState({ rows });
+    if (myDisplay.length) {
+      this.setState({ rows: myDisplay });
     }
   }
   componentDidMount() {
@@ -47,6 +41,11 @@ class App extends Component {
       console.log('socket => trees', tree)
       this.setState({ treeData: [tree.root] })
     })
+    socket.on('data', data => {
+      this.setState(prevState => {
+        prevState.perfData.push(data)
+      })
+    });
     if (this.state.treeData) {
       const dimensions = this.treeContainer.getBoundingClientRect();
       this.setState({
@@ -60,43 +59,37 @@ class App extends Component {
         }
       })
     }
-    socket.on('data', data => {
-      let newArr = this.state.perfData;
-      newArr.push(JSON.stringify(data));
-      console.log('socket => perf data', data)
-      this.setState({ perfData: newArr });
-    });
-  }
-
-  render() {
-    if (this.state.treeData) {
-      return (
-        <div>
-          <Dashboard />
-          <div id="treeWrapper"
-            style={{ width: "80em", height: "40em" }}
-            ref={tc => (this.treeContainer = tc)}
-          >
-            <Tree
-              data={this.state.treeData}
-              collapsible={true}
-              translate={this.state.translate}
-              onClick={this.onClick}
-              initialDepth={200}
-            />
-          </div>
-
-          <DashboardContainer rows={this.state.rows} />
-        </div>
-      );
-
     }
-    return (
-      <div>  <Dashboard /> </div>
-    )
+
+    render() {
+      if (this.state.treeData) {
+        return (
+          <div>
+            <Dashboard />
+            <div id="treeWrapper"
+              style={{ width: "80em", height: "40em" }}
+              ref={tc => (this.treeContainer = tc)}
+            >
+              <Tree
+                data={this.state.treeData}
+                collapsible={false}
+                translate={this.state.translate}
+                onClick={this.onClick}
+                initialDepth={200}
+              />
+            </div>
+
+            <DashboardContainer rows={this.state.rows} />
+          </div>
+        );
+
+      }
+      return (
+        <div>  <Dashboard /> </div>
+      )
+    }
+
+
   }
-
-
-}
-export default hot(module)(App);
+  export default hot(module)(App);
 
