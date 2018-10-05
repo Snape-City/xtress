@@ -18,7 +18,6 @@ const Extress = {
   durationObj: {},
   startTime: null,
 
-
   reset: () => {
     Extress.durationObj = {};
     Extress.startTime = null;
