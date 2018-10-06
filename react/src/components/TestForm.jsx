@@ -32,8 +32,8 @@ export default class TestForm extends Component {
   };
 
   render() {
-    const { modalShown } = this.props;
-    const showHideClassName = modalShown ? 'modal display-block' : 'modal display-none';
+    const { isModalShown } = this.props;
+    const showHideClassName = isModalShown ? 'modal display-block' : 'modal display-none';
 
     return (
       <div className={showHideClassName}>
