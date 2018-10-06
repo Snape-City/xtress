@@ -19,16 +19,21 @@ class App extends Component {
       perfData: [],
       treeData: null,
       rows: null,
-      translate: undefined,
       separation: {
         siblings: .5,
         nonSiblings: .5
       }
     };
+
     // Binding methods for tree manipulation
     this.onClick = this.onClick.bind(this);
+    this.generateTree = this.generateTree.bind(this);
+
   }
   //click events for each node performance
+  generateTree(e) {
+    this.setState(this.state)
+  }
 
   onClick(e) {
     this.setState({ rows: null })
@@ -54,16 +59,18 @@ class App extends Component {
         prevState.perfData.push(data)
       })
     });
-
-    if (this.state.treeData) {
-      const dimensions = this.treeContainer.getBoundingClientRect();
-
-    }
     }
 
     render() {
       if (this.state.treeData) {
         const dimensions = this.treeContainer.getBoundingClientRect();
+
+        
+        const svgFont = {
+            stroke: 'blue',
+            strokeWidth: 3,
+        }
+
         return (
           <div>
             <Dashboard />
@@ -71,6 +78,7 @@ class App extends Component {
               style={{ width: "80em", height: "40em" }}
               ref={tc => (this.treeContainer = tc)}
             >
+            <button onClick={this.generateTree}> Generate Tree </button>
               <Tree
                 data={this.state.treeData}
                 collapsible={false}
@@ -78,9 +86,23 @@ class App extends Component {
                 translate={{ x: dimensions.width / 8, y: dimensions.height / 2}}
                 onClick={this.onClick}
                 initialDepth={200}
+                styling={{
+                  font: "arial"
+                  // nodes: {
+                  //   node: {
+                  //     circle: <svgStyleObject>,
+                  //     name: <svgStyleObject>,
+                  //     attributes: <svgStyleObject>,
+                  //   },
+                  //   leafNode: {
+                  //     circle: <svgStyleObject>,
+                  //     name: <svgStyleObject>,
+                  //     attributes: <svgStyleObject>,
+                  //   },
+                  //   }
+                   }}
               />
             </div>
-
             <DashboardContainer rows={this.state.rows} />
           </div>
         );
@@ -89,6 +111,7 @@ class App extends Component {
       return (
         <div> 
            <Dashboard /> 
+           <button onClick={this.generateTree}> Generate Tree </button>
            <div id="treeWrapper"
               style={{ width: "80em", height: "40em" }}
               ref={tc => (this.treeContainer = tc)}
