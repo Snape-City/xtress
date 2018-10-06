@@ -24,10 +24,6 @@ export default class Dashboard extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log('tight => ', {
-      url: this.state.url,
-      tests: this.state.tests
-    })
     socket.emit('testData', {
       url: this.state.url,
       tests: this.state.tests
