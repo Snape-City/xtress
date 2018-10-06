@@ -49,8 +49,13 @@ export default class TestForm extends Component {
           </label>
           <br />
           <label>
-            Number of Requests:
+            Number of Overall Requests:
             <input type="number" name="numRequests" onChange={this.handleChange} />
+          </label>
+          <br />
+          <label>
+            Number of Concurrent Requests:
+            <input type="number" name="numConcurrent" onChange={this.handleChange} />
           </label>
           <br />
           <label>
