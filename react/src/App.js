@@ -12,14 +12,18 @@ const containerStyles = {
   width: "95%",
   height: "95%"
 };
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       perfData: [],
       treeData: null,
-      rows: null
+      rows: null,
+      translate: undefined,
+      separation: {
+        siblings: .5,
+        nonSiblings: .5
+      }
     };
     // Binding methods for tree manipulation
     this.onClick = this.onClick.bind(this);
@@ -37,32 +41,29 @@ class App extends Component {
     }
   }
   componentDidMount() {
+    
     socket.on('tree', tree => {
       console.log('socket => trees', tree)
-      this.setState({ treeData: [tree.root] })
+      this.setState({ 
+        treeData: [tree.root],
+      })
     })
+    
     socket.on('data', data => {
       this.setState(prevState => {
         prevState.perfData.push(data)
       })
     });
+
     if (this.state.treeData) {
       const dimensions = this.treeContainer.getBoundingClientRect();
-      this.setState({
-        translate: {
-          x: dimensions.width / 8,
-          y: dimensions.height / 2
-        },
-        separation: {
-          siblings: .5,
-          nonSiblings: .5
-        }
-      })
+
     }
     }
 
     render() {
       if (this.state.treeData) {
+        const dimensions = this.treeContainer.getBoundingClientRect();
         return (
           <div>
             <Dashboard />
@@ -73,7 +74,8 @@ class App extends Component {
               <Tree
                 data={this.state.treeData}
                 collapsible={false}
-                translate={this.state.translate}
+                separation={this.state.separation}
+                translate={{ x: dimensions.width / 8, y: dimensions.height / 2}}
                 onClick={this.onClick}
                 initialDepth={200}
               />
@@ -85,11 +87,16 @@ class App extends Component {
 
       }
       return (
-        <div>  <Dashboard /> </div>
+        <div> 
+           <Dashboard /> 
+           <div id="treeWrapper"
+              style={{ width: "80em", height: "40em" }}
+              ref={tc => (this.treeContainer = tc)}
+            ></div>
+           </div>
       )
     }
 
 
   }
   export default hot(module)(App);
-
