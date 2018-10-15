@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import TestForm from './TestForm.jsx';
-import TestContainer from './TestContainer.jsx';
+import React, { Component } from "react";
+import TestForm from "./TestForm.jsx";
+import TestContainer from "./TestContainer.jsx";
 
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: '',
+      url: "",
       isModalShown: false,
       tests: []
     };
@@ -24,7 +24,7 @@ export default class Dashboard extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    socket.emit('testData', {
+    socket.emit("testData", {
       url: this.state.url,
       tests: this.state.tests
     });
@@ -43,16 +43,27 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        <label>
-          Target URL:
-          <input type="text" value={this.state.url} onChange={this.handleChange} />
-        </label>
-        <br />
+        <div className="dashWrapper">
+          <label className="label">
+            <input
+              className="input-dashboard"
+              type="text"
+              placeholder="http://..."
+              value={this.state.url}
+              onChange={this.handleChange}
+            />
+          </label>
+        </div>
+        <div className="dash-button-wrapper">
+            <button className="button-1" onClick={this.showModal}>Add Test</button>
+            <button className="button-1" onClick={this.handleSubmit}>Run</button>
+        </div>
         <TestContainer tests={this.state.tests} />
-        <TestForm addTest={this.addTest} isModalShown={this.state.isModalShown} hideModal={this.hideModal} />
-        <button onClick={this.showModal}>Add Test</button>
-        <br />
-        <button onClick={this.handleSubmit}>Run</button>
+        <TestForm
+          addTest={this.addTest}
+          isModalShown={this.state.isModalShown}
+          hideModal={this.hideModal}
+        />
       </div>
     );
   }

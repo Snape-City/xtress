@@ -204,6 +204,9 @@ app.put('/heavily/nested/trash/routes', dummyController3.mw1, dummyController1.m
 app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
 
+console.log(app._router.stack)
+
+
 app.listen(PORT, () => {
   extress.map(app);
   console.log(`Listening on ${PORT}`);
