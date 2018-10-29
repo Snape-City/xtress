@@ -1,25 +1,109 @@
 body {
   height: 100%;
+  width: 100%;
   margin: 0;
-  background: white;
+  background: rgb(26,38,47);
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
-body {
-  margin: 1rem;
- 
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: white;
+.label {
+  display: inline-block;
+  width: 80em;
+  margin: 0 auto;
+  box-shadow: none; 
 }
-#root{
-  height: 200%;
 
+.label:focus {
+  outline: none;
+  box-shadow: none;
 }
-.display{
+
+.input-dashboard {
+  color: white;
+  font-size: 3em;
+  text-transform: lowercase;
+}
+
+.input-dashboard[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  background: none;
+  font:rgb(242,169,0) ;
+  border-bottom: 2px solid rgb(242,169,0);
+}
+
+p {
+  font: status-bar;
+  position: absolute;
+  /* width: 100px; */
+  /* height: 50px; */
+  top: 50%;
+  left: 50%;
+  margin-left: -50px; /* margin is -0.5 * dimension */
+  margin-top: -25px;
+}
+.dashboard-container-wrapper {
   text-align: center;
 }
 
+.dash-button-wrapper {
+  text-align: center;
+}
+
+.dashWrapper {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.dashWrapper:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+button {
+  display: inline-block;
+  padding: 1.35em 27.4em;
+  border:0.1em solid #FFFFFF;
+  margin:0 0.3em 0.3em 0;
+  border-radius:0.12em;
+  box-sizing: border-box;
+  text-decoration:none;
+  font-family:'Roboto',sans-serif;
+  font-weight:300;
+  columns: #000000;
+  text-align:center;
+  transition: all 0.2s;
+}
+
+button:hover{
+  color:#000000;
+  background-color:#FFFFFF;
+}
+
+#treeWrapper {
+  border: 1px solid black;
+  background-color: #e8e8e8;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  bottom: 0px;
+  top: 0px;
+  left: 0;
+}
+
+#root{
+  height: 100%;
+}
+
+.display{
+  text-align: center;
+}
 
 .modal {
   position: fixed;
@@ -28,12 +112,16 @@ body {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
 }
+
 
 .test-form-modal {
   position: fixed;
+  border: 2px solid rgb(242,169,0);
+  padding:20px;
   background: white;
-  width: 80%;
+  width: 50%;
   height: auto;
   top: 50%;
   left: 50%;

@@ -42,7 +42,6 @@ export default class TestForm extends Component {
             Route:
             <input type="text" name="route" onChange={this.handleChange} />
           </label>
-          <br />
           <label>
             Method:
             <input type="text" name="method" onChange={this.handleChange} />
