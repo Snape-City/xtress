@@ -4,8 +4,6 @@ import Tree from "react-d3-tree";
 import "./App.css";
 import DashboardContainer from "./DashboardContainer";
 import Header from "./Header";
-import Team from "./Team";
-//import Socket from './components/socket.jsx';
 import Dashboard from "./components/Dashboard.jsx";
 
 const containerStyles = {

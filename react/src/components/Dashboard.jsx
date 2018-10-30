@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import TestForm from "./TestForm.jsx";
-import TestContainer from "./TestContainer.jsx";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -34,7 +33,6 @@ export default class Dashboard extends Component {
   hideModal = () => this.setState({ isModalShown: false });
 
   addTest(config) {
-    // console.log('config ==>', config);
     this.setState(prevState => {
       return prevState.tests.push(config);
     });
@@ -58,7 +56,6 @@ export default class Dashboard extends Component {
             <button className="button-1" onClick={this.showModal}>Add Test</button>
             <button className="button-1" onClick={this.handleSubmit}>Run</button>
         </div>
-        <TestContainer tests={this.state.tests} />
         <TestForm
           addTest={this.addTest}
           isModalShown={this.state.isModalShown}

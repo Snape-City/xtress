@@ -31,7 +31,6 @@ const Extress = {
       // Extress.tree.addPerformance(performanceNode, req.method.toLowerCase(), performance.now() - start);
       const endTime = performance.now()
       const testId = req.headers.testid
-      console.log('Inside res.once(finish...). Headers ===>', req.headers);
       let duration = endTime - start;
       if (Extress.durationObj[testId]) {
         Extress.durationObj[testId].push(duration)
