@@ -1,27 +1,26 @@
 {
-  "name": "extress",
+  "name": "xtress",
   "version": "1.0.0",
-  "description": "![travis](https://travis-ci.com/Snape-City/extress.svg?branch=master)",
-  "main": "extress.js",
+  "description": "![travis](https://travis-ci.com/Snape-City/xtress.svg?branch=master)",
+  "main": "index.js",
   "scripts": {
     "test": "nyc mocha",
     "coverage": "npm test && nyc report --reporter=text-lcov | coveralls",
     "build": "webpack -d --watch --display-error-details",
     "demo-server": "node demo/server/demo-server.js",
-    "server": "nodemon lib/proxyServer.js",
-    "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "extress": "concurrently \"npm run server\" "
+    "xtress": "nodemon lib/proxyServer.js",
+    "client": "webpack-dev-server --mode development --devtool inline-source-map --hot"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Snape-City/extress.git"
+    "url": "git+https://github.com/Snape-City/xtress.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Snape-City/extress/issues"
+    "url": "https://github.com/Snape-City/xtress/issues"
   },
-  "homepage": "https://github.com/Snape-City/extress#readme",
+  "homepage": "https://github.com/Snape-City/xtress#readme",
   "devDependencies": {
     "axios": "^0.18.0",
     "babel-core": "^6.26.0",
@@ -52,7 +51,9 @@
     "agentkeepalive": "^3.5.1",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
     "material-ui-table": "^0.1.2",
+    "mongoose": "^5.3.7",
     "opn": "^5.4.0",
     "path": "^0.12.7",
     "react": "^16.5.2",

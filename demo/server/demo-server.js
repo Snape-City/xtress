@@ -1,17 +1,22 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+require('dotenv').config(); 
+const xtress = require('../../xtress');
 
-const extress = require('../../extress');
 const dummyController1 = require('./controllers/dummyController1');
 const dummyController2 = require('./controllers/dummyController2');
 const dummyController3 = require('./controllers/dummyController3');
 const dummyController4 = require('./controllers/dummyController4');
+const userController = require('./controllers/userController');
 const PORT = 3333;
 
-
-app.use(extress.routeTimer);
+app.use(xtress.routeTimer);
+app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', dummyController1.mw1, dummyController1.mw2, dummyController1.mw3, dummyController1.mwLast);
 app.post('/', dummyController1.mw1, dummyController1.mw2, dummyController1.mw3, dummyController1.mwLast);
@@ -203,11 +208,7 @@ app.post('/heavily/nested/trash/routes', dummyController2.mw1, dummyController1.
 app.put('/heavily/nested/trash/routes', dummyController3.mw1, dummyController1.mwLast);
 app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
-
-console.log(app._router.stack)
-
-
 app.listen(PORT, () => {
-  extress.map(app);
+  xtress.map(app);
   console.log(`Listening on ${PORT}`);
 });

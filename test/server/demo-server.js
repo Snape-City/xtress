@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config(); 
-extress = require('../../extress');
+xtress = require('../../xtress');
 
 const mongoDB = process.env.MONGOLAB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
@@ -19,7 +19,7 @@ const dummyController4 = require('./controllers/dummyController4');
 const userController = require('./userController');
 const PORT = 3333;
 
-//app.use(extress.routeTimer);
+app.use(xtress.routeTimer);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -217,6 +217,6 @@ app.put('/heavily/nested/trash/routes', dummyController3.mw1, dummyController1.m
 app.delete('/heavily/nested/trash/routes', dummyController4.mw1, dummyController1.mwLast);
 
 app.listen(PORT, () => {
-  //extress.map(app);
+  xtress.map(app);
   console.log(`Listening on ${PORT}`);
 });
